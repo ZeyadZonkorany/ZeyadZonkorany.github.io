@@ -28,20 +28,100 @@ function setup() {
   const updateThemeLabel = () => {
     const dark = document.documentElement.dataset.theme === 'dark';
     toggle?.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} theme`);
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#181e19' : '#eeede6');
+    const label = toggle?.querySelector('.theme-label');
+    if (label) label.textContent = dark ? 'Light theme' : 'Dark theme';
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#191c1e' : '#edeee9');
   };
   updateThemeLabel();
   toggle?.addEventListener('click', () => {
     const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = theme;
-    try { localStorage.setItem('zonkor-theme', theme); } catch { /* Theme still works if storage is unavailable. */ }
+    try { localStorage.setItem('zonkor-theme-v2', theme); } catch { /* Theme still works if storage is unavailable. */ }
     updateThemeLabel();
   }, { signal });
+
+
+  const dialog = document.querySelector<HTMLDialogElement>('.command-menu');
+  const quickSearch = document.querySelector<HTMLInputElement>('#quick-search');
+  const results = document.querySelector<HTMLElement>('.command-results');
+  type SearchItem = { title: string; href: string; label: string; search: string; external: boolean };
+  const items: SearchItem[] = JSON.parse(document.querySelector('#quick-search-data')?.textContent ?? '[]');
+  if (dialog && quickSearch && results) {
+    let selected = 0;
+    let resultLinks: HTMLAnchorElement[] = [];
+    let returnFocus: HTMLElement | null = null;
+    const select = (index: number) => {
+      selected = index;
+      resultLinks.forEach((link, i) => link.classList.toggle('active', i === selected));
+      resultLinks[selected]?.scrollIntoView({ block: 'nearest' });
+    };
+    const renderResults = () => {
+      const terms = quickSearch.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      const matches = items.filter((item) => terms.every((term) => item.search.includes(term))).slice(0, 12);
+      results.replaceChildren();
+      resultLinks = [];
+      matches.forEach((item, index) => {
+        const link = document.createElement('a');
+        link.className = 'command-result';
+        link.href = item.href;
+        if (item.external) { link.target = '_blank'; link.rel = 'noopener noreferrer'; }
+        const copy = document.createElement('div');
+        copy.textContent = item.title;
+        const label = document.createElement('span');
+        label.textContent = item.label;
+        copy.append(label);
+        const arrow = document.createElement('span');
+        arrow.textContent = item.external ? '↗' : '↵';
+        arrow.setAttribute('aria-hidden', 'true');
+        link.append(copy, arrow);
+        link.addEventListener('focus', () => select(index), { signal });
+        link.addEventListener('click', () => dialog.close(), { signal });
+        results.append(link);
+        resultLinks.push(link);
+      });
+      if (!matches.length) {
+        const empty = document.createElement('p');
+        empty.className = 'command-empty';
+        empty.textContent = 'No results found.';
+        results.append(empty);
+      }
+      select(0);
+    };
+    const open = () => {
+      if (dialog.open) { dialog.close(); return; }
+      returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      quickSearch.value = '';
+      renderResults();
+      dialog.showModal();
+      quickSearch.focus();
+    };
+    document.querySelector('.search-trigger')?.addEventListener('click', open, { signal });
+    document.querySelector('.command-close')?.addEventListener('click', () => dialog.close(), { signal });
+    dialog.addEventListener('close', () => returnFocus?.focus(), { signal });
+    dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); }, { signal });
+    quickSearch.addEventListener('input', renderResults, { signal });
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') { event.preventDefault(); dialog.close(); return; }
+      if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && resultLinks.length) {
+        event.preventDefault();
+        select((selected + (event.key === 'ArrowDown' ? 1 : -1) + resultLinks.length) % resultLinks.length);
+        resultLinks[selected]?.focus();
+      }
+      if (event.key === 'Enter' && event.target === quickSearch && resultLinks.length) {
+        event.preventDefault();
+        resultLinks[selected]?.click();
+      }
+    }, { signal });
+    document.addEventListener('keydown', (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); open(); }
+    }, { signal });
+  }
 
   const search = document.querySelector<HTMLInputElement>('#article-search');
   const filterButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.filter-button'));
   const entries = Array.from(document.querySelectorAll<HTMLElement>('.archive-entry'));
-  let category = 'All';
+  let category = new URL(location.href).searchParams.get('category') ?? 'All';
+  if (!filterButtons.some((button) => button.dataset.category === category)) category = 'All';
   if (search) {
     const query = new URL(location.href).searchParams.get('q');
     if (query) search.value = query;
@@ -55,7 +135,7 @@ function setup() {
         if (!entry.hidden) visible++;
       });
       const count = document.querySelector('#results-count');
-      if (count) count.textContent = `${visible} ${visible === 1 ? 'ENTRY' : 'ENTRIES'}`;
+      if (count) count.textContent = `${visible} ${visible === 1 ? 'entry' : 'entries'}`;
       const empty = document.querySelector<HTMLElement>('#no-results');
       if (empty) empty.hidden = visible > 0;
       filterButtons.forEach((button) => {
@@ -74,13 +154,14 @@ function setup() {
       category = 'All';
       const url = new URL(location.href);
       url.searchParams.delete('q');
+      url.searchParams.delete('category');
       history.replaceState({}, '', url);
       filter();
       search.focus();
     }, { signal });
     document.addEventListener('keydown', (event) => {
       const target = event.target as HTMLElement | null;
-      if (event.key === '/' && !event.ctrlKey && !event.metaKey && !event.altKey && !target?.closest('input, textarea, [contenteditable]')) {
+      if (!document.querySelector('dialog[open]') && event.key === '/' && !event.ctrlKey && !event.metaKey && !event.altKey && !target?.closest('input, textarea, [contenteditable]')) {
         event.preventDefault();
         search.focus();
       }
@@ -96,7 +177,7 @@ function setup() {
   document.querySelector<HTMLButtonElement>('.share-button')?.addEventListener('click', async () => {
     const url = new URL(location.href);
     url.hash = '';
-    notify(await copyText(url.href) ? 'LINK COPIED TO CLIPBOARD' : 'COPY THE URL FROM YOUR ADDRESS BAR');
+    notify(await copyText(url.href) ? 'Link copied to clipboard' : 'Copy the URL from your address bar');
   }, { signal });
 
   document.querySelectorAll<HTMLPreElement>('.prose pre').forEach((pre) => {
@@ -110,7 +191,7 @@ function setup() {
       const code = pre.querySelector('code')?.textContent ?? '';
       const success = await copyText(code);
       button.textContent = success ? 'COPIED' : 'RETRY';
-      notify(success ? 'CODE COPIED TO CLIPBOARD' : 'COULD NOT COPY CODE');
+      notify(success ? 'Code copied to clipboard' : 'Could not copy code');
       setTimeout(() => { button.textContent = 'COPY'; }, 2000);
     }, { signal });
     pre.appendChild(button);

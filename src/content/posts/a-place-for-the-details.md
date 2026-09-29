@@ -1,6 +1,6 @@
 ---
-title: "A place for the details."
-description: "Opening the notebook. A home for web security research, CTF writeups, and the observations in between."
+title: "About this blog"
+description: "What I publish here: web security research, CTF writeups, and technical notes."
 date: 2026-09-29
 category: Notes
 tags: [journal, introduction]
@@ -8,32 +8,24 @@ featured: true
 draft: false
 ---
 
-Some questions deserve more than a bookmark or a half-finished note.
+I’m **Zonkor**, a web security researcher and CTF player. This blog contains my research, challenge writeups, and technical notes.
 
-This is **Zonkor’s research journal**: a place for web security research, CTF writeups, and the details that are easy to overlook.
+## Categories
 
-## What belongs here
-
-The notebook is organized around three kinds of entries:
-
-| Section | What you’ll find |
+| Category | Content |
 | --- | --- |
-| Research | Investigations into web security and unexpected behavior |
-| CTF | Challenge writeups and the reasoning behind a solution |
-| Notes | Smaller observations, useful ideas, and things to come back to |
+| Research | Web security research and links to external resources |
+| CTF | Challenge writeups |
+| Notes | Technical notes and site updates |
 
-An entry can start with a small question. What was expected? What actually happened? Which assumption needs another look?
+External references link to their original publisher and are labeled with the source.
 
-The useful part is often the reasoning between the question and the answer.
+## Projects
 
-## Beyond the notebook
+My public work includes the [CTF challenge collection](https://github.com/ZeyadZonkorany/MY-CTF-CHALLENGES) and [0xL4ugh CTF 2025 web repository](https://github.com/ZeyadZonkorany/0xL4ugh-CTF-2025-Web).
 
-There’s also work outside the blog. The public [CTF challenge collection](https://github.com/ZeyadZonkorany/MY-CTF-CHALLENGES) and [0xL4ugh CTF 2025 web repository](https://github.com/ZeyadZonkorany/0xL4ugh-CTF-2025-Web) are linked from the homepage.
+You can find these on the [projects page](/projects/).
 
-Future entries will have room for diagrams, code, observations, and references, so the details can sit alongside the explanation.
+## Updates
 
-## Follow the next thread
-
-Browse [the notebook](/writing/) or subscribe to the [RSS feed](/rss.xml) to follow new entries as they appear.
-
-This is the opening page. The research comes next.
+Browse [all writing](/writing/) or subscribe to the [RSS feed](/rss.xml) for new articles.

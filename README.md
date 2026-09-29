@@ -1,6 +1,6 @@
 # Zonkor’s research journal
 
-A custom editorial blog for security research, CTF writeups, and field notes.
+A custom dark blog for security research, CTF writeups, and technical notes, with separate pages for writing, projects, and a profile.
 
 **Live site:** https://zeyadzonkorany.github.io
 
@@ -38,7 +38,7 @@ draft: false
 ---
 ```
 
-Categories are `Research`, `CTF`, or `Notes`. Set `featured: true` to feature an entry on the homepage; if several are featured, the newest is shown. A future date or `draft: true` excludes a post from the published site, RSS, and sitemap. This repository is public, so committed source files are still visible on GitHub; keep unpublished sensitive material outside the repository.
+Categories are `Research`, `CTF`, or `Notes`. The homepage shows three recent articles or research references. A future date or `draft: true` excludes a post from the published site, RSS, and sitemap. This repository is public, so committed source files are still visible on GitHub; keep unpublished sensitive material outside the repository.
 
 Articles support headings, tables, images, links, blockquotes, and highlighted code blocks. The table of contents and estimated reading time are automatic. Code blocks have a copy button. Put images in `public/images/` and reference them as `![Descriptive alt text](/images/my-diagram.png)`.
 
@@ -83,15 +83,18 @@ npm run publish -- --prepare-only
 
 ## Design and structure
 
-- `src/styles/global.css` — colors, typography, responsive layout, and motion.
+- `src/styles/site.css` — colors, typography, responsive layout, and motion.
 - `src/layouts/Base.astro` — shared navigation, footer, metadata, and theme.
-- `src/components/Diagram.astro` — the custom orbital illustration.
-- `src/pages/index.astro` — homepage and selected public projects.
+- `src/pages/index.astro` — short introduction and recent writing.
+- `src/pages/projects.astro` — public challenge repositories.
+- `src/lib/references.ts` — attributed external resources listed under Research.
 - `src/pages/about.astro` — personal profile and links.
 - `src/content/posts/` — article source files.
-- `src/scripts/site.ts` — search, filters, theme, copy controls, and reading progress.
+- `src/scripts/site.ts` — site search (Cmd/Ctrl+K), archive filters, theme, copy controls, and reading progress.
 - `scripts/publish.mjs` — local publishing of the built site to `gh-pages`.
 - `.github/workflows/deploy.yml` — automatic GitHub Pages deployment.
+
+Dark mode is the default. The optional light theme persists across pages. Research references link directly to the original publisher; they are not republished as local articles or included in the article RSS feed.
 
 The fonts are self hosted. There are no analytics, external font requests, or framework hydration. Motion respects the reader’s reduced motion preference. The journal remains readable with JavaScript disabled.
 

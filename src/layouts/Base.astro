@@ -1,31 +1,41 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import Icon from '../components/Icon.astro';
+import { publishedPosts } from '../lib/posts';
+import { researchReferences } from '../lib/references';
 import '@fontsource-variable/archivo';
 import '@fontsource-variable/dm-sans';
 import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/ibm-plex-mono/500.css';
-import '../styles/global.css';
-
+import '../styles/site.css';
 interface Props { title?: string; description?: string; article?: boolean; }
-const {
-  title = 'Zonkor — Security research & field notes',
-  description = 'The research journal of Zonkor. Web security, CTF writeups, and field notes from looking a little closer.',
-  article = false,
-} = Astro.props;
+const { title = 'Zonkor — Security research', description = 'Web security research, CTF writeups, and technical notes by Zonkor.', article = false } = Astro.props;
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site);
+const navigation = [
+  { label: 'Overview', href: '/', icon: 'home' as const },
+  { label: 'Writing', href: '/writing/', icon: 'file' as const },
+  { label: 'Projects', href: '/projects/', icon: 'folder' as const },
+  { label: 'About', href: '/about/', icon: 'user' as const },
+];
+const current = navigation.find((item) => item.href === '/' ? path === '/' : path.startsWith(item.href));
+const posts = await publishedPosts();
+const searchItems = [
+  ...navigation.map((item) => ({ title: item.label, href: item.href, label: 'Page', search: item.label.toLowerCase(), external: false })),
+  ...researchReferences.map((item) => ({ title: item.title, href: item.href, label: `${item.category} · ${item.source}`, search: `${item.title} ${item.tags.join(' ')} ${item.category} ${item.source}`.toLowerCase(), external: true })),
+  ...posts.map((post) => ({ title: post.data.title, href: `/writing/${post.id}/`, label: post.data.category, search: `${post.data.title} ${post.data.description} ${post.data.tags.join(' ')} ${post.body ?? ''}`.toLowerCase(), external: false })),
+];
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#eeede6" />
+    <meta name="theme-color" content="#191c1e" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate" type="application/rss+xml" title="Zonkor’s research journal" href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Zonkor’s writing" href="/rss.xml" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={article ? 'article' : 'website'} />
@@ -33,15 +43,12 @@ const canonical = new URL(path, Astro.site);
     <meta property="og:image" content={new URL('/social.png', Astro.site)} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Zonkor. Look closer. Security research and field notes." />
+    <meta property="og:image:alt" content="Zonkor — web security research, CTF writeups, and technical notes." />
     <meta name="twitter:card" content="summary_large_image" />
     <title>{title}</title>
     <script is:inline>
       (() => {
-        try {
-          const theme = localStorage.getItem('zonkor-theme') || 'light';
-          document.documentElement.dataset.theme = theme === 'dark' ? 'dark' : 'light';
-        } catch { document.documentElement.dataset.theme = 'light'; }
+        try { document.documentElement.dataset.theme = localStorage.getItem('zonkor-theme-v2') === 'light' ? 'light' : 'dark'; } catch {}
         document.documentElement.classList.add('js');
       })();
     </script>
@@ -49,24 +56,29 @@ const canonical = new URL(path, Astro.site);
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header shell" transition:name="site-header">
-      <a class="wordmark" href="/" aria-label="Zonkor, home">zonkor<span class="wordmark-dot">.</span></a>
-      <span class="header-caption mono">SECURITY RESEARCH<br />& FIELD NOTES</span>
-      <nav aria-label="Main navigation" class="main-nav">
-        <a class:list={['nav-link', { active: path.startsWith('/writing') }]} href="/writing/" aria-current={path.startsWith('/writing') ? 'page' : undefined}>Writing<span class="nav-index" aria-hidden="true">01</span></a>
-        <a class:list={['nav-link', { active: path.startsWith('/about') }]} href="/about/" aria-current={path.startsWith('/about') ? 'page' : undefined}>About<span class="nav-index" aria-hidden="true">02</span></a>
-        <a class="nav-link github-nav" href="https://github.com/ZeyadZonkorany" target="_blank" rel="noopener noreferrer">GitHub<Icon name="external" size={15} /></a>
-      </nav>
-      <button class="theme-toggle icon-button" type="button" aria-label="Switch to dark theme" title="Switch color theme">
-        <span class="theme-moon"><Icon name="moon" size={18} /></span><span class="theme-sun"><Icon name="sun" size={18} /></span>
-      </button>
-    </header>
-    <main id="main" class="shell" tabindex="-1"><slot /></main>
-    <footer class="site-footer shell" transition:name="site-footer">
-      <div class="footer-top"><a href="/" class="footer-wordmark">zonkor.</a><p>Stay curious.<br />Look closer.</p><a class="footer-contact" href="https://github.com/ZeyadZonkorany" target="_blank" rel="noopener noreferrer">Find me on GitHub <Icon name="external" size={26} /></a></div>
-      <div class="footer-bottom mono"><span>© {new Date().getUTCFullYear()} ZONKOR</span><span>INDEPENDENT SECURITY RESEARCH</span><div><a href="/rss.xml" data-astro-reload>RSS FEED ↗</a><a href="#main">BACK TO TOP ↑</a></div></div>
-    </footer>
-    <div class="toast mono" role="status" aria-live="polite"></div>
+    <div class="site-frame">
+      <aside class="site-sidebar" transition:name="site-navigation">
+        <div class="identity"><a class="wordmark" href="/" aria-label="Zonkor, home"><span class="brand-mark" aria-hidden="true">z</span><span>zonkor</span></a><span class="identity-caption">Security researcher</span></div>
+        <nav class="main-nav" aria-label="Main navigation">{navigation.map((item) => {
+          const active = item.href === '/' ? path === '/' : path.startsWith(item.href);
+          return <a href={item.href} class:list={['nav-link', { active }]} aria-current={active ? 'page' : undefined}><Icon name={item.icon} size={18} /><span>{item.label}</span><span class="nav-dot" aria-hidden="true"></span></a>;
+        })}</nav>
+        <div class="sidebar-bottom"><div class="sidebar-links"><a href="https://github.com/ZeyadZonkorany" target="_blank" rel="noopener noreferrer">GitHub <Icon name="external" size={13} /></a><a href="/rss.xml" data-astro-reload>RSS</a></div><button class="theme-toggle" type="button" aria-label="Switch to light theme"><span class="theme-sun"><Icon name="sun" size={16} /></span><span class="theme-moon"><Icon name="moon" size={16} /></span><span class="theme-label">Light theme</span></button></div>
+      </aside>
+      <div class="main-panel">
+        <header class="page-toolbar"><div class="breadcrumb mono"><span>zonkor</span><span aria-hidden="true">/</span><span>{current?.label.toLowerCase() ?? '404'}</span></div><button class="search-trigger" type="button"><Icon name="search" size={16} /><span>Search</span><kbd aria-hidden="true">⌘ K</kbd></button></header>
+        <main id="main" tabindex="-1"><slot /></main>
+        <footer class="site-footer"><span>© {new Date().getUTCFullYear()} Zonkor</span><div><a href="/rss.xml" data-astro-reload>RSS</a><a href="#main">Back to top ↑</a></div></footer>
+      </div>
+    </div>
+    <dialog class="command-menu" aria-labelledby="search-dialog-title">
+      <h2 class="sr-only" id="search-dialog-title">Search the site</h2>
+      <div class="command-input"><Icon name="search" size={20} /><label class="sr-only" for="quick-search">Search writing and pages</label><input id="quick-search" type="search" placeholder="Search writing and pages…" autocomplete="off" /><button class="command-close" type="button" aria-label="Close search"><Icon name="close" size={18} /></button></div>
+      <div class="command-results" aria-live="polite"></div>
+      <div class="command-footer mono"><span>↑ ↓ Select &nbsp; ↵ Open</span><span>esc Close</span></div>
+    </dialog>
+    <script id="quick-search-data" type="application/json" set:html={JSON.stringify(searchItems).replace(/</g, '\u003c')} />
+    <div class="toast" role="status" aria-live="polite"></div>
     <script src="../scripts/site.ts"></script>
   </body>
 </html>

@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+const projects = [
+  { name: 'My CTF challenges', description: 'A collection of public CTF challenges.', href: 'https://github.com/ZeyadZonkorany/MY-CTF-CHALLENGES', tag: 'CTF' },
+  { name: '0xL4ugh CTF 2025', description: 'Web challenges from 0xL4ugh CTF 2025.', href: 'https://github.com/ZeyadZonkorany/0xL4ugh-CTF-2025-Web', tag: 'Web security' },
+];
+---
+<Base title="Projects — Zonkor" description="Public CTF challenge repositories by Zonkor.">
+  <section class="page-intro"><span class="eyebrow">PUBLIC REPOSITORIES</span><h1>Projects<span class="accent">.</span></h1><p>CTF challenges and web security projects.</p></section>
+  <section class="project-grid" aria-label="Public projects">{projects.map((project) => <a class="project-card" href={project.href} target="_blank" rel="noopener noreferrer"><div class="project-card-top"><Icon name="folder" size={26} /><Icon name="external" size={19} /></div><h2>{project.name}</h2><p>{project.description}</p><div class="project-card-bottom"><span>{project.tag}</span><span class="mono">GitHub</span></div></a>)}</section>
+  <a class="text-link page-end-link" href="https://github.com/ZeyadZonkorany?tab=repositories" target="_blank" rel="noopener noreferrer">All repositories <Icon name="external" size={17} /></a>
+</Base>
