@@ -103,7 +103,7 @@ test('reading controls and article links work', async ({ page, context }) => {
 });
 
 test('pages and search fit mobile, tablet, and desktop screens', async ({ page }) => {
-  for (const width of [360, 390, 768, 1440]) {
+  for (const width of [320, 360, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     for (const path of ['/', '/writing/', '/projects/', '/about/', '/writing/a-place-for-the-details/', '/404.html']) {
       await page.goto(path);
@@ -124,6 +124,7 @@ test('pages and search have no automated accessibility violations in both themes
     await page.evaluate((value) => localStorage.setItem('zonkor-theme-v2', value), theme);
     for (const path of ['/', '/writing/', '/projects/', '/about/', '/writing/a-place-for-the-details/']) {
       await page.goto(path);
+      await page.evaluate(() => Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => {}))));
       const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
       expect(results.violations, `${path} in ${theme}`).toEqual([]);
     }

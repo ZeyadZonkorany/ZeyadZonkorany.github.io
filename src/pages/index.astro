@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import Wordmark from '../components/Wordmark.astro';
+import { monogramPath } from '../lib/identity';
 import Poster from '../components/Poster.astro';
 import { researchReferences } from '../lib/references';
 import { publishedPosts, formatDate, readingTime } from '../lib/posts';
@@ -14,8 +15,17 @@ const research = [
 <Base>
   <section class="masthead" aria-label="Zonkor">
     <div class="masthead-label mono"><span>Security research</span><span>Web / CTF</span></div>
-    <h1 class="display-name"><span class="sr-only">Zonkor.</span><Wordmark display /></h1>
-    <div class="masthead-bottom"><p>Web security researcher.<br />CTF player.</p><a class="large-text-link" href="/writing/">All writing <Icon name="arrow" size={28} /></a></div>
+    <div class="hero-composition">
+      <div class="hero-copy">
+        <h1 class="display-name"><span class="sr-only">Zonkor.</span><Wordmark display /></h1>
+        <p class="hero-description">Web security researcher.<br />CTF player.</p>
+        <div class="hero-actions"><a class="hero-pill" href="/writing/">Browse writing <Icon name="arrow" size={19} /></a><a class="hero-project-link" href="/projects/">Projects <Icon name="external" size={17} /></a></div>
+      </div>
+      <figure class="hero-object" aria-hidden="true">
+        <svg class="object-fallback" viewBox="0 0 280 360" fill="none"><g transform="translate(70 42)"><path d={monogramPath} fill="var(--accent)" /><path d="M0 116H140V124H0Z" fill="var(--bg)" /></g></svg>
+        <canvas id="hero-sculpture"></canvas>
+      </figure>
+    </div>
   </section>
   <section class="research-section" aria-labelledby="research-heading">
     <div class="section-heading"><h2 id="research-heading">Research</h2><span class="mono">{String(research.length).padStart(2, '0')} entries</span></div>

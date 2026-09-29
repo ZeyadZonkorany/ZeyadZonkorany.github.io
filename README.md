@@ -92,11 +92,12 @@ npm run publish -- --prepare-only
 - `src/lib/references.ts` — attributed external resources listed under Research.
 - `src/pages/about.astro` — personal profile and links.
 - `src/content/posts/` — article source files.
+- `src/scripts/hero.ts` — the local 3D ribbon, drawn on canvas with pointer and scroll input.
 - `src/scripts/site.ts` — site search (Cmd/Ctrl+K), archive filters, theme, copy controls, and reading progress.
 - `scripts/publish.mjs` — local publishing of the built site to `gh-pages`.
 - `.github/workflows/deploy.yml` — automatic GitHub Pages deployment.
 
-The design uses a custom stencil wordmark, warm copper and olive colors, and an asymmetric research layout. The wordmark reveals a second ink color under the pointer; cover artwork shifts slightly on hover. These decorative effects are disabled for reduced motion and do not affect touch navigation.
+The design uses a custom stencil wordmark, warm copper and olive colors, and an asymmetric research layout. The compact homepage wordmark reveals a second ink color under the pointer; cover artwork shifts slightly on hover. A small extruded Z responds to pointer movement and scroll. It renders locally, needs no video download, and stops rendering when its motion settles. These decorative effects are disabled for reduced motion and do not affect touch navigation.
 
 Dark mode is the default. The optional light theme persists across pages. Research references link directly to the original publisher; they are not republished as local articles or included in the article RSS feed.
 

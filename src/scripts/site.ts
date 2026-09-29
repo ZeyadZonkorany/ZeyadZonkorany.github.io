@@ -1,3 +1,5 @@
+import { setupHero } from './hero';
+
 let pageController: AbortController | undefined;
 let toastTimer: ReturnType<typeof setTimeout>;
 
@@ -42,6 +44,7 @@ function setup() {
 
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  setupHero(signal);
   document.querySelectorAll<SVGSVGElement>('.interactive-wordmark').forEach((svg) => {
     const aperture = svg.querySelector<SVGCircleElement>('.wordmark-aperture');
     svg.addEventListener('pointermove', (event) => {
