@@ -2,13 +2,15 @@
 
 A custom editorial blog for security research, CTF writeups, and field notes.
 
-**Site address:** https://zeyadzonkorany.github.io
+**Live site:** https://zeyadzonkorany.github.io
 
 ## Publishing status
 
-The source and the built website have been pushed to GitHub. The first hosted deployment was blocked before it started with: “The job was not started because your account is locked due to a billing issue.” See the [deployment run](https://github.com/ZeyadZonkorany/ZeyadZonkorany.github.io/actions/runs/36628612196).
+The blog is live. GitHub Pages publishes the built files from `gh-pages`, with a `.nojekyll` file. The [direct Pages deployment](https://github.com/ZeyadZonkorany/ZeyadZonkorany.github.io/actions/runs/36636520816) succeeded, and the public homepage returned HTTP 200 on September 30, 2026 (Cairo time).
 
-The custom workflow has been disabled temporarily. A direct branch deployment was requested using the built files on `gh-pages`, with a `.nojekyll` file. That deployment’s final status has not yet been verified.
+To publish an article now, edit its Markdown source, set `draft: false`, and run `npm run publish` locally. That command checks and builds the journal, then pushes the generated website to the publishing branch.
+
+The custom hosted build workflow is temporarily disabled. Its [first deployment](https://github.com/ZeyadZonkorany/ZeyadZonkorany.github.io/actions/runs/36628612196) was blocked by a GitHub account billing issue. This does not prevent the current direct Pages deployment from serving the blog.
 
 After the GitHub billing issue is resolved, choose **Settings → Pages → Source → GitHub Actions**, re-enable **Publish research journal** in the Actions tab, and run it once. Later edits to `main` will publish automatically.
 
@@ -71,7 +73,7 @@ When Pages is configured to publish from the `gh-pages` branch at `/ (root)`, us
 npm run publish
 ```
 
-This checks and builds the journal, copies the generated files into a temporary checkout, and pushes to `gh-pages` without a force push. It does not change your article checkout. GitHub still needs to accept the Pages deployment; this command does not resolve an account billing lock.
+This checks and builds the journal, copies the generated files into a temporary checkout, and pushes to `gh-pages` without a force push. It does not change your article checkout. GitHub Pages publishes the branch after the push. Source changes should also be committed and pushed to `main` so they are saved on GitHub.
 
 To prepare and validate the files without accessing GitHub or pushing:
 
