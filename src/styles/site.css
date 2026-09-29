@@ -75,7 +75,7 @@ main:focus { outline: none; }
 .masthead { padding-top: 40px; padding-bottom: 38px; border-bottom: 1px solid var(--line); }
 .masthead-label { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; margin-bottom: 28px; }
 .hero-composition { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 70px; align-items: center; }
-.display-name { line-height: 0; max-width: 780px; }
+.display-name { line-height: 0; width: 80%; max-width: 520px; }
 .hero-description { color: var(--muted); font-size: 17px; line-height: 1.7; margin-top: 29px; }
 .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 28px; margin-top: 25px; }
 .hero-pill { display: inline-flex; align-items: center; justify-content: center; gap: 22px; min-height: 46px; padding: 11px 21px; border-radius: 999px; background: var(--text); color: var(--bg); -webkit-text-fill-color: var(--bg); font-size: 13px; font-weight: 500; transition: transform .3s cubic-bezier(.22,.61,.36,1), background .3s; }
@@ -317,7 +317,7 @@ input::placeholder { color: var(--faint); opacity: 1; }
   .site-footer { padding-bottom: max(38px, calc(env(safe-area-inset-bottom, 0px) + 16px)); }
   .hero-composition { grid-template-columns: minmax(0, 1fr) 110px; gap: 0 10px; }
   .hero-copy { display: contents; }
-  .display-name { grid-column: 1/-1; width: 85%; }
+  .display-name { grid-column: 1/-1; width: 65%; }
   .hero-description { grid-column: 1; grid-row: 2; margin-top: 26px; font-size: 14px; }
   .hero-actions { grid-column: 1; grid-row: 3; gap: 0; align-items: flex-start; flex-direction: column; margin-top: 17px; }
   .hero-object { grid-column: 2; grid-row: 2/4; width: 110px; height: 165px; align-self: start; margin-top: 20px; }
