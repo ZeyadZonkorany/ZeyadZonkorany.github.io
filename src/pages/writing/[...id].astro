@@ -1,0 +1,25 @@
+---
+import { render } from 'astro:content';
+import type { Post } from '../../lib/posts';
+import { publishedPosts, formatDate, readingTime } from '../../lib/posts';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+
+export async function getStaticPaths() {
+  const posts = await publishedPosts();
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+interface Props { post: Post; }
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const jsonLd = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: post.data.title, description: post.data.description, datePublished: post.data.date.toISOString(), dateModified: (post.data.updated ?? post.data.date).toISOString(), author: { '@type': 'Person', name: 'Zonkor', url: new URL('/about/', Astro.site).href }, mainEntityOfPage: Astro.url.href };
+---
+<Base title={`${post.data.title} — Zonkor`} description={post.data.description} article>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\\u003c')} />
+  <div class="reading-progress" aria-hidden="true"><div id="reading-progress-bar"></div></div>
+  <header class="article-header"><a class="back-link mono" href="/writing/">← BACK TO THE NOTEBOOK</a><div class="article-kicker mono"><span class="tag">{post.data.category}</span><time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time><span>{readingTime(post)} MIN READ</span></div><h1>{post.data.title}</h1><p class="article-description">{post.data.description}</p><div class="article-byline"><span class="author-mark" aria-hidden="true">z.</span><div><span>Zonkor</span><span class="mono">SECURITY RESEARCHER</span></div><button class="share-button text-link mono" type="button">COPY LINK <Icon name="copy" size={16} /></button></div></header>
+  <div class="article-grid"><aside class="article-toc"><nav aria-label="Table of contents"><span class="eyebrow mono">IN THIS ENTRY</span><ol>{toc.map((heading) => <li class:list={{ 'toc-subheading': heading.depth === 3 }}><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ol></nav><a class="toc-back mono" href="/writing/">↙ ALL WRITING</a></aside><article class="prose" id="article-body"><Content /></article></div>
+  <div class="article-end"><span class="end-mark" aria-hidden="true">✳</span><span class="mono">END OF ENTRY</span><div class="article-tags mono">{post.data.tags.map((tag) => <a href={`/writing/?q=${encodeURIComponent(tag)}`}>#{tag}</a>)}</div></div>
+  <section class="article-next"><div><span class="eyebrow mono">KEEP FOLLOWING THE THREAD</span><h2>There’s always<br /><span class="serif">more to notice.</span></h2></div><a href="/writing/" class="text-link">Back to the notebook <span class="circle-arrow"><Icon name="arrow" /></span></a></section>
+</Base>

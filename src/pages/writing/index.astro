@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { publishedPosts, formatDate, readingTime } from '../../lib/posts';
+const posts = await publishedPosts();
+const categories = ['All', 'Research', 'CTF', 'Notes'];
+---
+<Base title="The notebook — Zonkor" description="Browse Zonkor’s security research, CTF writeups, and research notes.">
+  <section class="page-intro"><span class="eyebrow mono">01 / RESEARCH JOURNAL</span><div class="page-heading-line"><h1>The notebook<span class="accent">.</span></h1><span class="entry-count mono">{String(posts.length).padStart(2, '0')}<br />ENTRIES</span></div><p>A running record of questions, observations,<br class="desktop-break" /> and things that didn’t behave as expected.</p></section>
+  <section class="archive" aria-label="Writing archive">
+    <div class="archive-controls"><div class="filter-group" role="group" aria-label="Filter by category">{categories.map((category) => <button type="button" class:list={['filter-button', { selected: category === 'All' }]} data-category={category} aria-pressed={category === 'All'}>{category}<span class="mono">{category === 'All' ? posts.length : posts.filter((p) => p.data.category === category).length}</span></button>)}</div><label class="search-box"><Icon name="search" size={18} /><span class="sr-only">Search articles</span><input type="search" id="article-search" placeholder="Find a thread…" autocomplete="off" /><kbd>/</kbd></label></div>
+    <div class="archive-meta mono"><span id="results-count" role="status" aria-live="polite">{posts.length} {posts.length === 1 ? 'ENTRY' : 'ENTRIES'}</span><span>NEWEST FIRST ↓</span></div>
+    <div class="archive-list">{posts.map((post, index) => <article class="archive-entry" data-post-id={post.id} data-post-category={post.data.category} data-search={`${post.data.title} ${post.data.description} ${post.data.tags.join(' ')} ${post.body ?? ''}`.toLowerCase()}><a href={`/writing/${post.id}/`}><span class="archive-number mono">{String(index + 1).padStart(2, '0')}</span><div class="archive-entry-content"><div class="eyebrow mono"><span>{post.data.category}</span><span> / </span><time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time></div><h2>{post.data.title}</h2><p>{post.data.description}</p><div class="archive-tags mono">{post.data.tags.map((tag) => <span>#{tag}</span>)}</div></div><span class="archive-reading mono">{readingTime(post)} MIN</span><Icon name="external" size={28} /></a></article>)}</div>
+    <div id="no-results" class="empty-state" hidden><span class="empty-symbol" aria-hidden="true">∅</span><h2>No threads here. Yet.</h2><p>Try another topic or a different search.</p><button type="button" id="reset-search" class="text-link">Clear filters <Icon name="arrow" size={18} /></button></div>
+    <noscript><p class="noscript-note">All entries are shown. Enable JavaScript to search and filter.</p></noscript>
+    <div class="archive-end mono"><span>END OF THE CURRENT NOTEBOOK</span><a href="/rss.xml" data-astro-reload>FOLLOW NEW ENTRIES VIA RSS ↗</a></div>
+  </section>
+</Base>

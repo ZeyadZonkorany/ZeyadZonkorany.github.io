@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Diagram from '../components/Diagram.astro';
+import { publishedPosts, formatDate, readingTime } from '../lib/posts';
+const posts = await publishedPosts();
+const featured = posts.find((post) => post.data.featured) || posts[0];
+---
+<Base>
+  <section class="hero">
+    <div class="hero-kicker mono"><span><span class="status-dot"></span>THE INDEPENDENT RESEARCH JOURNAL</span><span>EST. 2026 / VOL. 01</span></div>
+    <div class="hero-grid">
+      <div class="hero-title-wrap"><h1 class="hero-title">LOOK<br /><span class="closer">CLOSER<span class="hero-period">.</span></span></h1><div class="hero-bottom"><span class="hero-asterisk" aria-hidden="true">✳</span><p>Interesting things happen<br />at the edges of a system.</p></div></div>
+      <div class="hero-aside"><span class="vertical-label mono">NOT EVERYTHING IS WHAT IT SEEMS</span><p class="hero-intro">Web security.<br />Unexpected behavior.<br /><em>The details in between.</em></p><p class="hero-description">I’m Zonkor, a security researcher and CTF player. This is where I document the questions, the rabbit holes, and what comes out the other side.</p><a href="/writing/" class="text-link">Explore the journal <span class="circle-arrow"><Icon name="arrow" /></span></a></div>
+    </div>
+    <div class="hero-rule mono"><span>WEB SECURITY / CTF / RESEARCH NOTES</span><span>SCROLL TO EXPLORE ↓</span></div>
+  </section>
+
+  <section class="latest-section" aria-labelledby="latest-heading">
+    <div class="section-label mono"><h2 id="latest-heading">01 / THE LATEST ENTRY</h2><span>A NOTE FROM THE NOTEBOOK</span></div>
+    {featured ? <a class="featured-entry" href={`/writing/${featured.id}/`}>
+      <div class="featured-copy"><div class="featured-meta mono"><span class="tag">{featured.data.category}</span><time datetime={featured.data.date.toISOString()}>{formatDate(featured.data.date)}</time></div><div class="featured-text"><span class="eyebrow mono">FROM THE NOTEBOOK</span><h3>{featured.data.title}</h3><p>{featured.data.description}</p></div><div class="featured-bottom mono"><span>{readingTime(featured)} MIN READ</span><span class="featured-read">READ THE ENTRY <Icon name="arrow" size={23} /></span></div></div>
+      <Diagram />
+    </a> : <div class="empty-state"><h3>The notebook is open.</h3><p>The first entry is on its way.</p></div>}
+  </section>
+
+  <section class="notebook-section" aria-labelledby="notebook-heading">
+    <div class="notebook-intro"><span class="eyebrow mono">02 / THE NOTEBOOK</span><h2 id="notebook-heading">Follow the<br />{' '}<span class="serif">loose threads.</span></h2><p>Research, writeups, and small observations. Each entry is a piece of the bigger picture.</p><a href="/writing/" class="text-link">All writing <Icon name="arrow" size={20} /></a></div>
+    <div class="recent-list">{posts.slice(0, 3).map((post, i) => <a href={`/writing/${post.id}/`} class="recent-entry"><span class="recent-number mono">{String(i + 1).padStart(2, '0')}</span><div><span class="eyebrow mono">{post.data.category} / {formatDate(post.data.date)}</span><h3>{post.data.title}</h3><p>{post.data.description}</p></div><Icon name="external" size={24} /></a>)}<div class="notebook-note mono"><span class="status-dot"></span>MORE THREADS TO FOLLOW.</div></div>
+  </section>
+
+  <section class="projects-section" aria-labelledby="projects-heading">
+    <div class="section-label mono"><h2 id="projects-heading">03 / OUTSIDE THE NOTEBOOK</h2><span>SELECTED PUBLIC REPOSITORIES</span></div>
+    <div class="project-list">
+      <a href="https://github.com/ZeyadZonkorany/MY-CTF-CHALLENGES" class="project-link" target="_blank" rel="noopener noreferrer"><span class="project-number mono">A</span><h3>My CTF challenges</h3><span class="project-description">A collection of challenges</span><span class="project-type mono">CTF / GITHUB</span><Icon name="external" size={23} /></a>
+      <a href="https://github.com/ZeyadZonkorany/0xL4ugh-CTF-2025-Web" class="project-link" target="_blank" rel="noopener noreferrer"><span class="project-number mono">B</span><h3>0xL4ugh CTF 2025</h3><span class="project-description">Web challenge repository</span><span class="project-type mono">WEB / GITHUB</span><Icon name="external" size={23} /></a>
+    </div>
+  </section>
+
+  <section class="about-strip"><span class="about-symbol" aria-hidden="true">↳</span><p>Curiosity is the starting point.<br /><span class="serif">Understanding is the goal.</span></p><a href="/about/" class="text-link">A little about me <span class="circle-arrow"><Icon name="arrow" /></span></a></section>
+</Base>
