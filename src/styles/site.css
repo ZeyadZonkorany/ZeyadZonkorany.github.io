@@ -181,7 +181,7 @@ input::placeholder { color: var(--faint); opacity: 1; }
 .prose strong { font-weight: 620; }
 .prose img { display: block; max-width: 100%; height: auto; border-radius: 8px; margin: 28px 0; }
 .prose table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; font-size: 12px; margin: 25px 0; line-height: 1.6; }
-.prose th, .prose td { text-align: left; border-bottom: 1px solid var(--line); padding: 12px 14px 12px 0; }
+.prose th, .prose td { overflow-wrap: normal; text-align: left; border-bottom: 1px solid var(--line); padding: 12px 14px 12px 0; }
 .prose th { font-weight: 550; color: var(--muted); }
 .prose blockquote { border-left: 2px solid var(--accent); margin: 26px 0; padding: 0 0 0 22px; color: var(--muted); }
 .prose code { font: .82em var(--mono); border-radius: 3px; background: var(--surface); padding: 3px 5px; }
