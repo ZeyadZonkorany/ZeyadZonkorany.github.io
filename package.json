@@ -9,6 +9,7 @@
     "build": "astro build",
     "preview": "astro preview --host 127.0.0.1",
     "new-post": "node scripts/new-post.mjs",
+    "publish": "node scripts/publish.mjs",
     "test": "playwright test"
   },
   "dependencies": {
