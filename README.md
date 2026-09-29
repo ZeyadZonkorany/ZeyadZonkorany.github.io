@@ -38,7 +38,7 @@ draft: false
 ---
 ```
 
-Categories are `Research`, `CTF`, or `Notes`. The homepage shows three recent articles or research references. A future date or `draft: true` excludes a post from the published site, RSS, and sitemap. This repository is public, so committed source files are still visible on GitHub; keep unpublished sensitive material outside the repository.
+Categories are `Research`, `CTF`, or `Notes`. The homepage shows the two newest Research articles or external research references. A future date or `draft: true` excludes a post from the published site, RSS, and sitemap. This repository is public, so committed source files are still visible on GitHub; keep unpublished sensitive material outside the repository.
 
 Articles support headings, tables, images, links, blockquotes, and highlighted code blocks. The table of contents and estimated reading time are automatic. Code blocks have a copy button. Put images in `public/images/` and reference them as `![Descriptive alt text](/images/my-diagram.png)`.
 
@@ -85,7 +85,9 @@ npm run publish -- --prepare-only
 
 - `src/styles/site.css` — colors, typography, responsive layout, and motion.
 - `src/layouts/Base.astro` — shared navigation, footer, metadata, and theme.
-- `src/pages/index.astro` — short introduction and recent writing.
+- `src/pages/index.astro` — custom masthead and the newest research.
+- `src/components/Wordmark.astro` and `src/lib/identity.ts` — the original stencil lettering.
+- `src/components/Poster.astro` — vector cover artwork for research and projects.
 - `src/pages/projects.astro` — public challenge repositories.
 - `src/lib/references.ts` — attributed external resources listed under Research.
 - `src/pages/about.astro` — personal profile and links.
@@ -93,6 +95,8 @@ npm run publish -- --prepare-only
 - `src/scripts/site.ts` — site search (Cmd/Ctrl+K), archive filters, theme, copy controls, and reading progress.
 - `scripts/publish.mjs` — local publishing of the built site to `gh-pages`.
 - `.github/workflows/deploy.yml` — automatic GitHub Pages deployment.
+
+The design uses a custom stencil wordmark, warm copper and olive colors, and an asymmetric research layout. The wordmark reveals a second ink color under the pointer; cover artwork shifts slightly on hover. These decorative effects are disabled for reduced motion and do not affect touch navigation.
 
 Dark mode is the default. The optional light theme persists across pages. Research references link directly to the original publisher; they are not republished as local articles or included in the article RSS feed.
 

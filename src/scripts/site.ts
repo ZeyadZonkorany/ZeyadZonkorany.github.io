@@ -30,7 +30,7 @@ function setup() {
     toggle?.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} theme`);
     const label = toggle?.querySelector('.theme-label');
     if (label) label.textContent = dark ? 'Light theme' : 'Dark theme';
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#191c1e' : '#edeee9');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#171b19' : '#e8e4d7');
   };
   updateThemeLabel();
   toggle?.addEventListener('click', () => {
@@ -40,6 +40,29 @@ function setup() {
     updateThemeLabel();
   }, { signal });
 
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  document.querySelectorAll<SVGSVGElement>('.interactive-wordmark').forEach((svg) => {
+    const aperture = svg.querySelector<SVGCircleElement>('.wordmark-aperture');
+    svg.addEventListener('pointermove', (event) => {
+      if (event.pointerType === 'touch' || reduceMotion.matches || !aperture) return;
+      const rect = svg.getBoundingClientRect();
+      aperture.setAttribute('cx', String((event.clientX - rect.left) / rect.width * 940));
+      aperture.setAttribute('cy', String((event.clientY - rect.top) / rect.height * 240));
+    }, { passive: true, signal });
+  });
+  document.querySelectorAll<HTMLElement>('.research-feature .cover').forEach((cover) => {
+    cover.addEventListener('pointermove', (event) => {
+      if (event.pointerType === 'touch' || reduceMotion.matches) return;
+      const rect = cover.getBoundingClientRect();
+      cover.style.setProperty('--shift-x', `${((event.clientX - rect.left) / rect.width - .5) * 16}px`);
+      cover.style.setProperty('--shift-y', `${((event.clientY - rect.top) / rect.height - .5) * 16}px`);
+    }, { passive: true, signal });
+    cover.addEventListener('pointerleave', () => {
+      cover.style.removeProperty('--shift-x');
+      cover.style.removeProperty('--shift-y');
+    }, { signal });
+  });
 
   const dialog = document.querySelector<HTMLDialogElement>('.command-menu');
   const quickSearch = document.querySelector<HTMLInputElement>('#quick-search');

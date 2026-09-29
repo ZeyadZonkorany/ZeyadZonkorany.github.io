@@ -1,9 +1,10 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import Icon from '../components/Icon.astro';
+import Wordmark from '../components/Wordmark.astro';
 import { publishedPosts } from '../lib/posts';
 import { researchReferences } from '../lib/references';
-import '@fontsource-variable/archivo';
+import '@fontsource-variable/archivo/standard.css';
 import '@fontsource-variable/dm-sans';
 import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/ibm-plex-mono/500.css';
@@ -13,12 +14,11 @@ const { title = 'Zonkor — Security research', description = 'Web security rese
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site);
 const navigation = [
-  { label: 'Overview', href: '/', icon: 'home' as const },
+  { label: 'Home', href: '/', icon: 'home' as const },
   { label: 'Writing', href: '/writing/', icon: 'file' as const },
   { label: 'Projects', href: '/projects/', icon: 'folder' as const },
   { label: 'About', href: '/about/', icon: 'user' as const },
 ];
-const current = navigation.find((item) => item.href === '/' ? path === '/' : path.startsWith(item.href));
 const posts = await publishedPosts();
 const searchItems = [
   ...navigation.map((item) => ({ title: item.label, href: item.href, label: 'Page', search: item.label.toLowerCase(), external: false })),
@@ -32,7 +32,7 @@ const searchItems = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#191c1e" />
+    <meta name="theme-color" content="#171b19" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title="Zonkor’s writing" href="/rss.xml" />
@@ -57,19 +57,16 @@ const searchItems = [
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <div class="site-frame">
-      <aside class="site-sidebar" transition:name="site-navigation">
-        <div class="identity"><a class="wordmark" href="/" aria-label="Zonkor, home"><span class="brand-mark" aria-hidden="true">z</span><span>zonkor</span></a><span class="identity-caption">Security researcher</span></div>
+      <header class="site-header" transition:name="site-header">
+        <a class="wordmark" href="/" aria-label="Zonkor, home"><Wordmark /></a>
         <nav class="main-nav" aria-label="Main navigation">{navigation.map((item) => {
           const active = item.href === '/' ? path === '/' : path.startsWith(item.href);
-          return <a href={item.href} class:list={['nav-link', { active }]} aria-current={active ? 'page' : undefined}><Icon name={item.icon} size={18} /><span>{item.label}</span><span class="nav-dot" aria-hidden="true"></span></a>;
+          return <a href={item.href} class:list={['nav-link', { active }]} aria-current={active ? 'page' : undefined}>{item.label}</a>;
         })}</nav>
-        <div class="sidebar-bottom"><div class="sidebar-links"><a href="https://github.com/ZeyadZonkorany" target="_blank" rel="noopener noreferrer">GitHub <Icon name="external" size={13} /></a><a href="/rss.xml" data-astro-reload>RSS</a></div><button class="theme-toggle" type="button" aria-label="Switch to light theme"><span class="theme-sun"><Icon name="sun" size={16} /></span><span class="theme-moon"><Icon name="moon" size={16} /></span><span class="theme-label">Light theme</span></button></div>
-      </aside>
-      <div class="main-panel">
-        <header class="page-toolbar"><div class="breadcrumb mono"><span>zonkor</span><span aria-hidden="true">/</span><span>{current?.label.toLowerCase() ?? '404'}</span></div><button class="search-trigger" type="button"><Icon name="search" size={16} /><span>Search</span><kbd aria-hidden="true">⌘ K</kbd></button></header>
-        <main id="main" tabindex="-1"><slot /></main>
-        <footer class="site-footer"><span>© {new Date().getUTCFullYear()} Zonkor</span><div><a href="/rss.xml" data-astro-reload>RSS</a><a href="#main">Back to top ↑</a></div></footer>
-      </div>
+        <div class="header-actions"><button class="search-trigger" type="button" aria-label="Search"><Icon name="search" size={19} /><kbd aria-hidden="true">⌘ K</kbd></button><button class="theme-toggle" type="button" aria-label="Switch to light theme"><span class="theme-sun"><Icon name="sun" size={19} /></span><span class="theme-moon"><Icon name="moon" size={19} /></span></button></div>
+      </header>
+      <main id="main" tabindex="-1"><slot /></main>
+      <footer class="site-footer"><a href="/" class="footer-brand" aria-label="Zonkor, home">ZONKOR<span class="accent">/</span></a><span class="footer-copyright">© {new Date().getUTCFullYear()} Zonkor</span><div><a href="https://github.com/ZeyadZonkorany" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="/rss.xml" data-astro-reload>RSS ↗</a><a href="#main">↑ Top</a></div></footer>
     </div>
     <dialog class="command-menu" aria-labelledby="search-dialog-title">
       <h2 class="sr-only" id="search-dialog-title">Search the site</h2>

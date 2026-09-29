@@ -1,0 +1,45 @@
+---
+import { monogramPath } from '../lib/identity';
+interface Props { kind: 'css' | 'redirect' | 'ctf' | 'web' | 'note'; }
+const { kind } = Astro.props;
+---
+<svg class:list={['poster', `poster-${kind}`]} viewBox="0 0 720 520" fill="none" aria-hidden="true">
+  {kind === 'css' ? <>
+    <path fill="#b9bda6" d="M0 0H720V520H0Z" />
+    <g stroke="#25312c" stroke-width="1" opacity=".35"><path d="M0 104H720M0 208H720M0 312H720M0 416H720M144 0V520M288 0V520M432 0V520M576 0V520" /></g>
+    <path d="M513 0V520" stroke="#25312c" stroke-width="2" stroke-dasharray="6 9" />
+    <g class="poster-shift">
+      <g transform="translate(88 65) rotate(-12 248 188)">
+        <path d="M0 0H492V374H0Z" fill="#dfd6bf" stroke="#25312c" stroke-width="3" />
+        <path d="M0 46H492M42 0V374" stroke="#25312c" stroke-width="2" />
+        <path d="M61 83H451V329H61Z" fill="#25312c" />
+        <text x="73" y="267" font-size="190" font-weight="850" letter-spacing="-13" fill="#dfd6bf" class="poster-type">CSS</text>
+        <path d="M283 16H462M16 61V351" stroke="#25312c" stroke-width="2" stroke-dasharray="2 5" />
+      </g>
+      <path d="M430 305L642 260L675 415L463 460Z" fill="#be866e" stroke="#25312c" stroke-width="3" />
+      <path d="M463 322L615 290M468 343L620 311M473 364L625 332M478 385L630 353M483 406L635 374M488 427L640 395" stroke="#25312c" stroke-width="2" />
+    </g>
+    <path d="M27 26H54M40 13V40M666 480H693M680 467V494" stroke="#25312c" stroke-width="2" />
+  </> : kind === 'redirect' ? <>
+    <path fill="#b47f6b" d="M0 0H720V520H0Z" />
+    <g stroke="#392c26" stroke-width="1" opacity=".4"><path d="M0 130H720M0 260H720M0 390H720M120 0V520M240 0V520M360 0V520M480 0V520M600 0V520" /></g>
+    <g class="poster-shift">
+      <circle cx="553" cy="251" r="169" stroke="#ddcdb3" stroke-width="48" />
+      <text x="18" y="371" font-size="318" font-weight="850" letter-spacing="-27" fill="#262722" class="poster-type">204</text>
+      <path d="M-20 76H595V447H227" stroke="#dfd6bf" stroke-width="17" />
+      <path d="M275 402L227 447L275 490" stroke="#dfd6bf" stroke-width="17" />
+      <path d="M91 443H156M124 411V476" stroke="#262722" stroke-width="3" />
+    </g>
+    <text x="36" y="44" font-size="17" letter-spacing="3" fill="#171b19" class="poster-mono">HTTP</text>
+  </> : kind === 'ctf' || kind === 'web' ? <>
+    <path fill={kind === 'ctf' ? '#b9bda6' : '#b47f6b'} d="M0 0H720V520H0Z" />
+    <g class="poster-shift" stroke="#26312a" stroke-width="3">
+      {[0, 1, 2, 3].map((n) => <path d={`M${110+n*46} ${55+n*60}h300l90 70v175h-390Z`} fill={n % 2 === 0 ? '#dfd6bf' : 'none'} />)}
+      <path d="M290 260L354 318L290 374M392 374H466" stroke="#26312a" stroke-width="14" />
+    </g>
+  </> : <>
+    <path fill="#b9bda6" d="M0 0H720V520H0Z" />
+    <path d="M0 130H720M0 260H720M0 390H720M180 0V520M360 0V520M540 0V520" stroke="#26312a" opacity=".3" />
+    <path transform="translate(248 70) scale(1.6)" d={monogramPath} fill="#26312a" />
+  </>}
+</svg>

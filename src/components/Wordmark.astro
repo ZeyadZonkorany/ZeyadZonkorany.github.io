@@ -1,0 +1,11 @@
+---
+import { wordmarkPath } from '../lib/identity';
+interface Props { display?: boolean; }
+const { display = false } = Astro.props;
+---
+<svg class:list={['wordmark-art', { 'interactive-wordmark': display }]} viewBox="0 0 940 240" fill="currentColor" aria-hidden="true">
+  {display && <defs><clipPath id="wordmark-aperture"><circle class="wordmark-aperture" cx="470" cy="120" r="140" /></clipPath></defs>}
+  <path d={wordmarkPath} fill-rule="evenodd" />
+  {display && <g class="wordmark-ink" clip-path="url(#wordmark-aperture)"><path d={wordmarkPath} fill-rule="evenodd" /></g>}
+  <path d="M0 116H940V124H0Z" class="wordmark-seam" />
+</svg>
