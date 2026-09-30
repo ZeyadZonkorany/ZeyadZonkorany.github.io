@@ -42,6 +42,8 @@ Categories are `Research`, `CTF`, or `Notes`. The homepage shows the two newest 
 
 Articles support headings, tables, images, links, blockquotes, and highlighted code blocks. The table of contents and estimated reading time are automatic. Code blocks have a copy button. Put images in `public/images/` and reference them as `![Descriptive alt text](/images/my-diagram.png)`.
 
+The CTF section includes edited overviews of **EnD** and **1nfin1ty** from `MY-CTF-CHALLENGES`, with links to the complete original writeups. The original publication dates come from that repository's June 29, 2026 commits; the blog adaptations are dated September 30, 2026. Their covers are local SVG artwork. Optional article metadata includes `event`, `cover` (`note`, `ctf`, `web`, `end`, or `infinity`), and `source` with a `url` and `label`. The two newest CTF posts appear below Research on the homepage.
+
 ## Work locally
 
 Requires Node.js 22.12 or later.

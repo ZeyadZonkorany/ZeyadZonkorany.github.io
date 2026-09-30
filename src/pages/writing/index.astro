@@ -7,7 +7,7 @@ import { researchReferences } from '../../lib/references';
 const posts = await publishedPosts();
 const entries = [
   ...researchReferences.map((item) => ({ ...item, description: 'External reference · ZeroSploit', meta: 'Reference · ZeroSploit', search: `${item.title} ${item.tags.join(' ')} ZeroSploit`, external: true })),
-  ...posts.map((post) => ({ id: post.id, title: post.data.title, href: `/writing/${post.id}/`, category: post.data.category, cover: 'note' as const, description: post.data.description, tags: post.data.tags, meta: `${formatDate(post.data.date)} · ${readingTime(post)} min read`, search: `${post.data.title} ${post.data.description} ${post.data.tags.join(' ')} ${post.body ?? ''}`, external: false })),
+  ...posts.map((post) => ({ id: post.id, title: post.data.title, href: `/writing/${post.id}/`, category: post.data.category, cover: post.data.cover, description: post.data.description, tags: post.data.tags, meta: `${formatDate(post.data.date)} · ${readingTime(post)} min read`, search: `${post.data.title} ${post.data.description} ${post.data.tags.join(' ')} ${post.body ?? ''}`, external: false })),
 ];
 const categories = ['All', 'Research', 'CTF', 'Notes'];
 ---

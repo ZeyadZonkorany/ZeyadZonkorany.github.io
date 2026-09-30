@@ -7,6 +7,7 @@ import Poster from '../components/Poster.astro';
 import { researchReferences } from '../lib/references';
 import { publishedPosts, formatDate, readingTime } from '../lib/posts';
 const posts = await publishedPosts();
+const writeups = posts.filter((post) => post.data.category === 'CTF').slice(0, 2);
 const research = [
   ...researchReferences.map((item) => ({ ...item, date: item.added, external: true, meta: `Reference · ${item.source}` })),
   ...posts.filter((post) => post.data.category === 'Research').map((post) => ({ title: post.data.title, href: `/writing/${post.id}/`, category: post.data.category, date: post.data.date.toISOString(), cover: 'note' as const, external: false, meta: `${formatDate(post.data.date)} · ${readingTime(post)} min read` })),
@@ -31,4 +32,8 @@ const research = [
     <div class="section-heading"><h2 id="research-heading">Research</h2><span class="mono">{String(research.length).padStart(2, '0')} entries</span></div>
     <div class="research-spread">{research.map((item, index) => <a class:list={['research-feature', `feature-${index + 1}`]} href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined}><div class="cover"><Poster kind={item.cover} /><span class="cover-open"><Icon name="external" size={28} /></span></div><div class="feature-meta mono"><span>{String(index + 1).padStart(2, '0')} / Research</span><span>{item.meta}</span></div><h3>{item.title}</h3></a>)}</div>
   </section>
+  {writeups.length > 0 && <section class="ctf-section" aria-labelledby="ctf-heading">
+    <div class="section-heading"><h2 id="ctf-heading">CTF writeups</h2><a class="ctf-all mono" href="/writing/?category=CTF">All writeups <Icon name="arrow" size={17} /></a></div>
+    <div class="ctf-list">{writeups.map((post) => <a class="ctf-preview" href={`/writing/${post.id}/`}><div class="ctf-cover"><Poster kind={post.data.cover} /></div><div class="ctf-copy"><span class="eyebrow">{post.data.event ?? 'CTF'} · {readingTime(post)} min read</span><h3>{post.data.title.split(' — ')[0]}</h3><p>{post.data.description}</p></div><Icon name="arrow" size={24} /></a>)}</div>
+  </section>}
 </Base>

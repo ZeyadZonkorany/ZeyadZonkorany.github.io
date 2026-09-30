@@ -1,9 +1,9 @@
 ---
 import { monogramPath } from '../lib/identity';
-interface Props { kind: 'css' | 'redirect' | 'ctf' | 'web' | 'note'; }
+interface Props { kind: 'css' | 'redirect' | 'ctf' | 'web' | 'note' | 'end' | 'infinity'; }
 const { kind } = Astro.props;
 ---
-<svg class:list={['poster', `poster-${kind}`]} viewBox="0 0 720 520" fill="none" aria-hidden="true">
+<svg class:list={['poster', `poster-${kind}`]} viewBox="0 0 720 520" preserveAspectRatio="xMidYMid slice" fill="none" aria-hidden="true">
   {kind === 'css' ? <>
     <path fill="#b9bda6" d="M0 0H720V520H0Z" />
     <g stroke="#25312c" stroke-width="1" opacity=".35"><path d="M0 104H720M0 208H720M0 312H720M0 416H720M144 0V520M288 0V520M432 0V520M576 0V520" /></g>
@@ -31,6 +31,35 @@ const { kind } = Astro.props;
       <path d="M91 443H156M124 411V476" stroke="#262722" stroke-width="3" />
     </g>
     <text x="36" y="44" font-size="17" letter-spacing="3" fill="#171b19" class="poster-mono">HTTP</text>
+  </> : kind === 'end' ? <>
+    <path fill="#b9bda6" d="M0 0H720V520H0Z" />
+    <path d="M0 130H720M0 260H720M0 390H720M180 0V520M360 0V520M540 0V520" stroke="#25312c" opacity=".3" />
+    <g class="poster-shift">
+      <g transform="translate(98 68) rotate(-8 251 175)">
+        <path d="M0 0H502V350H0Z" fill="#dfd6bf" stroke="#25312c" stroke-width="3" />
+        <path d="M0 45H502M0 291H502" stroke="#25312c" stroke-width="2" />
+        <path d="M20 22H50M60 22H90M100 22H130" stroke="#25312c" stroke-width="4" />
+        <text x="23" y="247" font-size="207" letter-spacing="-12" font-weight="800" fill="#25312c" class="poster-type">EnD</text>
+        <path d="M30 313H304M30 329H222" stroke="#25312c" stroke-width="2" />
+      </g>
+      <path d="M520 157V456M483 419L520 456L557 419" stroke="#b47f6b" stroke-width="20" />
+    </g>
+    <text x="29" y="488" font-size="16" letter-spacing="3" fill="#25312c" class="poster-mono">SEKAI / 2026</text>
+  </> : kind === 'infinity' ? <>
+    <path fill="#b47f6b" d="M0 0H720V520H0Z" />
+    <path d="M0 130H720M0 260H720M0 390H720M144 0V520M288 0V520M432 0V520M576 0V520" stroke="#392c26" opacity=".3" />
+    <g class="poster-shift">
+      <g transform="rotate(8 360 260)">
+        <path d="M96 80H605V415H96Z" fill="#25312c" />
+        <path d="M76 62H584V395H76Z" fill="#dfd6bf" stroke="#25312c" stroke-width="3" />
+        <path d="M76 113H584" stroke="#25312c" stroke-width="2" />
+        <path d="M96 86H131M141 86H176" stroke="#25312c" stroke-width="4" />
+        <path d="M330 258C280 181 158 181 158 258C158 335 280 335 330 258C380 181 502 181 502 258C502 335 380 335 330 258Z" stroke="#25312c" stroke-width="30" />
+      </g>
+      <path d="M536 372H650V463H536Z" fill="#b9bda6" stroke="#25312c" stroke-width="3" />
+      <text x="548" y="433" font-size="49" font-weight="700" fill="#25312c" class="poster-type">v5</text>
+    </g>
+    <text x="29" y="488" font-size="16" letter-spacing="3" fill="#25312c" class="poster-mono">0xL4ugh / WEB</text>
   </> : kind === 'ctf' || kind === 'web' ? <>
     <path fill={kind === 'ctf' ? '#b9bda6' : '#b47f6b'} d="M0 0H720V520H0Z" />
     <g class="poster-shift" stroke="#26312a" stroke-width="3">

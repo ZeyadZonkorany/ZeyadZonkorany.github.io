@@ -4,6 +4,7 @@ import type { Post } from '../../lib/posts';
 import { publishedPosts, formatDate, readingTime } from '../../lib/posts';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
+import Poster from '../../components/Poster.astro';
 export async function getStaticPaths() {
   const posts = await publishedPosts();
   return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
@@ -18,6 +19,8 @@ const jsonLd = { '@context': 'https://schema.org', '@type': 'BlogPosting', headl
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\u003c')} />
   <div class="reading-progress" aria-hidden="true"><div id="reading-progress-bar"></div></div>
   <header class="article-header"><a class="back-link" href="/writing/">← All writing</a><div class="entry-meta"><span class="category-label">{post.data.category}</span><time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time><span>{readingTime(post)} min read</span></div><h1>{post.data.title}</h1><p class="article-description">{post.data.description}</p><div class="article-byline"><span class="brand-mark" aria-hidden="true">z</span><span>Zonkor</span><button class="share-button text-link" type="button">Copy link <Icon name="copy" size={15} /></button></div></header>
+  {post.data.source && <div class="article-source"><div><span class="eyebrow">{post.data.event ?? post.data.category}</span><p>Edited overview · Original on GitHub</p></div><a href={post.data.source.url} target="_blank" rel="noopener noreferrer">{post.data.source.label} <Icon name="external" size={16} /></a></div>}
+  {post.data.cover !== 'note' && <div class="article-cover"><Poster kind={post.data.cover} /></div>}
   <div class="article-grid"><article class="prose" id="article-body"><Content /></article>{toc.length > 0 && <aside class="article-toc"><nav aria-label="Table of contents"><span class="eyebrow">ON THIS PAGE</span><ol>{toc.map((heading) => <li class:list={{ 'toc-subheading': heading.depth === 3 }}><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ol></nav></aside>}</div>
   <div class="article-end"><div class="article-tags mono">{post.data.tags.map((tag) => <a href={`/writing/?q=${encodeURIComponent(tag)}`}>#{tag}</a>)}</div><a class="text-link" href="/writing/">All writing <Icon name="arrow" size={17} /></a></div>
 </Base>
