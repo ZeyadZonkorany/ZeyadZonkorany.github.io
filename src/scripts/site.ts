@@ -71,7 +71,7 @@ function setup() {
   const quickSearch = document.querySelector<HTMLInputElement>('#quick-search');
   const results = document.querySelector<HTMLElement>('.command-results');
   type SearchItem = { title: string; href: string; label: string; search: string; external: boolean };
-  const items: SearchItem[] = JSON.parse(document.querySelector('#quick-search-data')?.textContent ?? '[]');
+  const items: SearchItem[] = JSON.parse(document.querySelector<HTMLElement>('#quick-search-data')?.dataset.search ?? '[]');
   if (dialog && quickSearch && results) {
     let selected = 0;
     let resultLinks: HTMLAnchorElement[] = [];

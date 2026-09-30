@@ -25,6 +25,7 @@ const searchItems = [
   ...researchReferences.map((item) => ({ title: item.title, href: item.href, label: `${item.category} · ${item.source}`, search: `${item.title} ${item.tags.join(' ')} ${item.category} ${item.source}`.toLowerCase(), external: true })),
   ...posts.map((post) => ({ title: post.data.title, href: `/writing/${post.id}/`, label: post.data.category, search: `${post.data.title} ${post.data.description} ${post.data.tags.join(' ')} ${post.body ?? ''}`.toLowerCase(), external: false })),
 ];
+const searchData = JSON.stringify(searchItems);
 ---
 <!doctype html>
 <html lang="en" data-theme="dark">
@@ -74,7 +75,7 @@ const searchItems = [
       <div class="command-results" aria-live="polite"></div>
       <div class="command-footer mono"><span>↑ ↓ Select &nbsp; ↵ Open</span><span>esc Close</span></div>
     </dialog>
-    <script id="quick-search-data" type="application/json" set:html={JSON.stringify(searchItems).replace(/</g, '\u003c')} />
+    <div id="quick-search-data" data-search={searchData} hidden></div>
     <div class="toast" role="status" aria-live="polite"></div>
     <script src="../scripts/site.ts"></script>
   </body>

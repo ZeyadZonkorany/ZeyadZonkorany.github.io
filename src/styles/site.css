@@ -211,12 +211,14 @@ input::placeholder { color: var(--faint); opacity: 1; }
 .not-found { padding-top: 110px; max-width: 850px; }
 .not-found .text-link { margin-top: 36px; }
 .prose { font-size: 17px; line-height: 1.9; overflow-wrap: anywhere; min-width: 0; }
+.prose > h1:first-child { display: none; }
 .prose > :first-child { margin-top: 0; }
 .prose p, .prose ul, .prose ol { margin: 0 0 22px; }
 .prose h2 { margin: 37px 0 17px; font-size: 29px; line-height: 1.4; letter-spacing: -.03em; }
 .prose h3 { margin: 29px 0 15px; font-size: 19px; }
 .prose a { color: var(--accent); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 4px; }
 .prose a:hover { text-decoration-color: var(--accent); }
+.prose a code { color: var(--text); }
 .prose strong { font-weight: 620; }
 .prose img { display: block; max-width: 100%; height: auto; border-radius: 8px; margin: 28px 0; }
 .prose table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; font-size: 14px; margin: 25px 0; line-height: 1.6; }
