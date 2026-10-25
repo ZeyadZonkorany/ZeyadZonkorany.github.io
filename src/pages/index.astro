@@ -10,8 +10,8 @@ const posts = await publishedPosts();
 const writeups = posts.filter((post) => post.data.category === 'CTF').slice(0, 2);
 const research = [
   ...researchReferences.map((item) => ({ ...item, date: item.added, external: true, meta: `Reference · ${item.source}` })),
-  ...posts.filter((post) => post.data.category === 'Research').map((post) => ({ title: post.data.title, href: `/writing/${post.id}/`, category: post.data.category, date: post.data.date.toISOString(), cover: 'note' as const, external: false, meta: `${formatDate(post.data.date)} · ${readingTime(post)} min read` })),
-].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 2);
+  ...posts.filter((post) => post.data.category === 'Research').map((post) => ({ title: post.data.title, href: `/writing/${post.id}/`, category: post.data.category, date: post.data.date.toISOString(), cover: post.data.cover, external: false, meta: `${formatDate(post.data.date)} · ${readingTime(post)} min read` })),
+].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 3);
 ---
 <Base>
   <section class="masthead" aria-label="Zonkor">

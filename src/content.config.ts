@@ -10,7 +10,7 @@ const posts = defineCollection({
     date: z.coerce.date(),
     updated: z.coerce.date().optional(),
     category: z.enum(['Research', 'CTF', 'Notes']).default('Research'),
-    cover: z.enum(['note', 'ctf', 'web', 'end', 'infinity']).default('note'),
+    cover: z.enum(['note', 'ctf', 'web', 'end', 'infinity', 'x25']).default('note'),
     event: z.string().optional(),
     source: z.object({ url: z.url(), label: z.string() }).optional(),
     tags: z.array(z.string()).default([]),

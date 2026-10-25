@@ -32,9 +32,9 @@ test('dark is the default, navigation is separated, and the selected theme persi
 
 test('Research contains both credited source links and archive filters work', async ({ page }) => {
   await page.goto('/writing/');
-  await expect(page.locator('.archive-entry:visible')).toHaveCount(5);
-  await page.getByRole('button', { name: 'Research 2' }).click();
-  await expect(page.locator('.archive-entry:visible')).toHaveCount(2);
+  await expect(page.locator('.archive-entry:visible')).toHaveCount(6);
+  await page.getByRole('button', { name: 'Research 3' }).click();
+  await expect(page.locator('.archive-entry:visible')).toHaveCount(3);
   for (const [title, href] of researchLinks) {
     const link = page.locator('.archive-list').getByRole('link', { name: title, exact: false });
     await expect(link).toHaveAttribute('href', href);
@@ -54,10 +54,26 @@ test('Research contains both credited source links and archive filters work', as
   await page.getByRole('searchbox', { name: 'Search articles', exact: true }).fill('nothing-matches-this');
   await expect(page.locator('.archive-entry:visible')).toHaveCount(0);
   await page.keyboard.press('Escape');
-  await expect(page.locator('.archive-entry:visible')).toHaveCount(5);
+  await expect(page.locator('.archive-entry:visible')).toHaveCount(6);
   await page.goto('/writing/?category=Research&q=CSS');
   await expect(page.locator('.archive-entry:visible')).toHaveCount(1);
-  await expect(page.getByRole('button', { name: 'Research 2' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('button', { name: 'Research 3' })).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('dnsjava research is featured with its advisory, reproducer, and fix status', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.research-feature')).toHaveCount(3);
+  await expect(page.locator('.research-feature[href="/writing/dnsjava-x25-unicode-digits/"] .poster-x25')).toBeVisible();
+  for (const [, href] of researchLinks) {
+    await expect(page.locator(`.research-feature[href="${href}"]`)).toBeVisible();
+  }
+  await page.locator('.research-feature[href="/writing/dnsjava-x25-unicode-digits/"]').click();
+  await expect(page.locator('.article-header h1')).toHaveText('Digits In, GHOST Out');
+  await expect(page.locator('.article-source')).toContainText('Published security advisory');
+  await expect(page.locator('.article-source a')).toHaveAttribute('href', 'https://github.com/dnsjava/dnsjava/security/advisories/GHSA-whp4-9hfm-h8xr');
+  await expect(page.locator('#article-body')).toContainText('decoded:  GHOST');
+  await expect(page.locator('#fix-and-status')).toHaveText('Fix and status');
+  await expect(page.locator('#article-body')).toContainText('3.7.0');
 });
 
 test('both CTF articles are discoverable and link to the original writeups', async ({ page, context }) => {
@@ -129,7 +145,7 @@ test('reading controls and article links work', async ({ page, context }) => {
 test('pages and search fit mobile, tablet, and desktop screens', async ({ page }) => {
   for (const width of [320, 360, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    for (const path of ['/', '/writing/', '/projects/', '/about/', '/writing/a-place-for-the-details/', '/writing/end/', '/writing/1nfin1ty/', '/404.html']) {
+    for (const path of ['/', '/writing/', '/projects/', '/about/', '/writing/a-place-for-the-details/', '/writing/end/', '/writing/1nfin1ty/', '/writing/dnsjava-x25-unicode-digits/', '/404.html']) {
       await page.goto(path);
       await page.evaluate(() => document.fonts.ready);
       const sizes = await page.evaluate(() => ({ viewport: innerWidth, document: document.documentElement.scrollWidth }));
@@ -146,7 +162,7 @@ test('pages and search have no automated accessibility violations in both themes
   for (const theme of ['light', 'dark']) {
     await page.goto('/');
     await page.evaluate((value) => localStorage.setItem('zonkor-theme-v2', value), theme);
-    for (const path of ['/', '/writing/', '/projects/', '/about/', '/writing/a-place-for-the-details/', '/writing/end/', '/writing/1nfin1ty/']) {
+    for (const path of ['/', '/writing/', '/projects/', '/about/', '/writing/a-place-for-the-details/', '/writing/end/', '/writing/1nfin1ty/', '/writing/dnsjava-x25-unicode-digits/']) {
       await page.goto(path);
       await page.evaluate(() => Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => {}))));
       const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
@@ -164,12 +180,14 @@ test('feeds, metadata, source attribution, and draft exclusion are correct', asy
   expect(await rss.text()).toContain('About this blog');
   expect(await rss.text()).toContain('EnD — Sekai CTF 2026');
   expect(await rss.text()).toContain('1nfin1ty — 0xL4ugh CTF v5');
+  expect(await rss.text()).toContain('/writing/dnsjava-x25-unicode-digits/');
   expect(await rss.text()).not.toContain('Your first research entry');
   expect(await rss.text()).not.toContain('When CSS Crosses the Boundary');
   const sitemap = await readFile('dist/sitemap-0.xml', 'utf8');
   expect(sitemap).toContain('https://zeyadzonkorany.github.io/projects/');
   expect(sitemap).toContain('https://zeyadzonkorany.github.io/writing/end/');
   expect(sitemap).toContain('https://zeyadzonkorany.github.io/writing/1nfin1ty/');
+  expect(sitemap).toContain('https://zeyadzonkorany.github.io/writing/dnsjava-x25-unicode-digits/');
   expect(sitemap).not.toContain('your-first-research-entry');
   await expect(access('dist/writing/your-first-research-entry/index.html')).rejects.toThrow();
   const html = await readFile('dist/writing/a-place-for-the-details/index.html', 'utf8');
@@ -188,7 +206,7 @@ test('the site remains readable without JavaScript and respects reduced motion',
   await expect(noJsPage.locator('html')).toHaveAttribute('data-theme', 'dark');
   await expect(noJsPage.getByRole('heading', { name: 'Categories', exact: true })).toBeVisible();
   await noJsPage.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Writing', exact: true }).click();
-  await expect(noJsPage.locator('.archive-entry')).toHaveCount(5);
+  await expect(noJsPage.locator('.archive-entry')).toHaveCount(6);
   await expect(noJsPage.getByRole('button', { name: 'Search', exact: true })).toHaveCount(0);
   await expect(noJsPage.locator('.archive-controls')).not.toBeVisible();
   await noJs.close();

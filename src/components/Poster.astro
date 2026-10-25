@@ -1,6 +1,6 @@
 ---
 import { monogramPath } from '../lib/identity';
-interface Props { kind: 'css' | 'redirect' | 'ctf' | 'web' | 'note' | 'end' | 'infinity'; }
+interface Props { kind: 'css' | 'redirect' | 'ctf' | 'web' | 'note' | 'end' | 'infinity' | 'x25'; }
 const { kind } = Astro.props;
 ---
 <svg class:list={['poster', `poster-${kind}`]} viewBox="0 0 720 520" preserveAspectRatio="xMidYMid slice" fill="none" aria-hidden="true">
@@ -31,6 +31,20 @@ const { kind } = Astro.props;
       <path d="M91 443H156M124 411V476" stroke="#262722" stroke-width="3" />
     </g>
     <text x="36" y="44" font-size="17" letter-spacing="3" fill="#171b19" class="poster-mono">HTTP</text>
+  </> : kind === 'x25' ? <>
+    <path fill="#a6af9f" d="M0 0H720V520H0Z" />
+    <g stroke="#26312a" stroke-width="1" opacity=".27"><path d="M0 104H720M0 208H720M0 312H720M0 416H720M120 0V520M240 0V520M360 0V520M480 0V520M600 0V520" /></g>
+    <g class="poster-shift">
+      <path d="M49 62H674V231H49Z" fill="#dfd6bf" stroke="#26312a" stroke-width="3" />
+      <path d="M49 108H674" stroke="#26312a" stroke-width="2" />
+      <text x="67" y="91" font-size="16" letter-spacing="3" fill="#26312a" class="poster-mono">UNICODE DECIMAL / ACCEPTED</text>
+      <g fill="#26312a" font-size="18" class="poster-mono"><text x="64" y="171">U+1047</text><text x="184" y="171">U+1048</text><text x="304" y="171">U+194F</text><text x="424" y="171">U+0E53</text><text x="544" y="171">U+0E54</text></g>
+      <path d="M168 183V210M288 183V210M408 183V210M528 183V210M648 183V210" stroke="#b47f6b" stroke-width="4" />
+      <path d="M348 221V285M332 267L348 285L364 267" stroke="#26312a" stroke-width="11" />
+      <path d="M49 301H674V445H49Z" fill="#26312a" />
+      <text x="64" y="411" font-size="139" font-weight="800" letter-spacing="-9" fill="#dfd6bf" class="poster-type">GHOST</text>
+    </g>
+    <text x="49" y="493" font-size="16" letter-spacing="3" fill="#26312a" class="poster-mono">X25 / LOW BYTE</text>
   </> : kind === 'end' ? <>
     <path fill="#b9bda6" d="M0 0H720V520H0Z" />
     <path d="M0 130H720M0 260H720M0 390H720M180 0V520M360 0V520M540 0V520" stroke="#25312c" opacity=".3" />

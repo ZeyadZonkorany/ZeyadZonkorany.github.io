@@ -97,7 +97,11 @@ main:focus { outline: none; }
 .section-heading > span { color: var(--muted); font-size: 11px; }
 .research-spread { display: grid; grid-template-columns: 1.25fr 1fr; gap: 68px; }
 .research-feature { display: block; min-width: 0; }
-.feature-2 { margin-top: 112px; }
+.feature-1 { grid-column: 1/-1; display: grid; grid-template-columns: 1.25fr 1fr; grid-template-rows: 1fr auto; column-gap: 54px; align-items: end; }
+.feature-1 .cover { grid-row: 1/3; }
+.feature-1 .feature-meta { margin-top: 0; }
+.feature-1 h3 { align-self: start; margin-top: 14px; max-width: 12ch; }
+.feature-3 { margin-top: 112px; }
 .cover { position: relative; overflow: hidden; aspect-ratio: 18/13; }
 .poster { display: block; width: 100%; height: 100%; }
 .poster-type { font-family: var(--heading); font-stretch: 90%; }
@@ -261,7 +265,8 @@ input::placeholder { color: var(--faint); opacity: 1; }
   .site-header { gap: 25px; }
   .main-nav { gap: 24px; }
   .research-spread { gap: 42px; }
-  .feature-2 { margin-top: 82px; }
+  .feature-1 { column-gap: 38px; }
+  .feature-3 { margin-top: 82px; }
   .archive-entry > a { grid-template-columns: 30px minmax(0, 1fr) 140px 22px; gap: 25px; }
   .archive-art { width: 140px; }
   .project-card { grid-template-columns: 30px minmax(0, 1fr) 190px 26px; gap: 25px; }
@@ -296,7 +301,8 @@ input::placeholder { color: var(--faint); opacity: 1; }
   .section-heading h2 { font-size: 30px; }
   .section-heading > span { font-size: 10px; }
   .research-spread { gap: 29px; }
-  .feature-2 { margin-top: 62px; }
+  .feature-1 { column-gap: 28px; }
+  .feature-3 { margin-top: 62px; }
   .research-feature h3 { font-size: 28px; }
   .feature-meta { font-size: 9px; }
   .cover-open { width: 44px; height: 44px; }
@@ -355,7 +361,10 @@ input::placeholder { color: var(--faint); opacity: 1; }
   .article-cover { margin-top: 26px; aspect-ratio: 18/12; }
   .large-text-link { min-width: 140px; font-size: 16px; gap: 16px; }
   .research-spread { grid-template-columns: minmax(0, 1fr); gap: 42px; }
-  .feature-2 { margin-top: 0; margin-left: 28px; }
+  .feature-1 { display: block; }
+  .feature-1 .feature-meta { margin-top: 17px; }
+  .feature-1 h3 { max-width: none; }
+  .feature-3 { margin-top: 0; margin-left: 28px; }
   .research-feature h3 { font-size: 32px; line-height: 1.1; }
   .feature-meta { margin-top: 17px; font-size: 9px; }
   .section-heading { padding-bottom: 23px; }
