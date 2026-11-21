@@ -76,6 +76,26 @@ test('dnsjava research is featured with its advisory, reproducer, and fix status
   await expect(page.locator('#article-body')).toContainText('3.7.0');
 });
 
+test('code blocks stay readable in both themes and keep controls visible while scrolling', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 900 });
+  await page.goto('/writing/dnsjava-x25-unicode-digits/');
+  const frame = page.locator('.code-frame').nth(2);
+  const pre = frame.locator('pre');
+  await expect(frame.locator('.code-language')).toHaveText('java');
+  for (const theme of ['dark', 'light']) {
+    if (theme === 'light') await page.getByRole('button', { name: 'Switch to light theme' }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
+    const tokenBackground = await pre.locator('span').first().evaluate((token) => getComputedStyle(token).backgroundColor);
+    expect(tokenBackground).toBe('rgba(0, 0, 0, 0)');
+    const copy = frame.getByRole('button', { name: 'Copy code block' });
+    const before = await copy.boundingBox();
+    await pre.evaluate((element) => { element.scrollLeft = element.scrollWidth; });
+    const after = await copy.boundingBox();
+    expect(after!.x).toBeCloseTo(before!.x, 0);
+    await pre.evaluate((element) => { element.scrollLeft = 0; });
+  }
+});
+
 test('both CTF articles are discoverable and link to the original writeups', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/');

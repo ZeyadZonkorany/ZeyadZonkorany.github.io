@@ -207,12 +207,26 @@ function setup() {
   }, { signal });
 
   document.querySelectorAll<HTMLPreElement>('.prose pre').forEach((pre) => {
-    if (pre.querySelector('.copy-code')) return;
-    const button = document.createElement('button');
-    button.className = 'copy-code';
-    button.type = 'button';
-    button.textContent = 'COPY';
-    button.setAttribute('aria-label', 'Copy code block');
+    let frame = pre.parentElement;
+    if (!frame?.classList.contains('code-frame')) {
+      frame = document.createElement('div');
+      frame.className = 'code-frame';
+      const toolbar = document.createElement('div');
+      toolbar.className = 'code-toolbar';
+      const language = document.createElement('span');
+      language.className = 'code-language';
+      language.textContent = pre.dataset.language || 'Code';
+      const button = document.createElement('button');
+      button.className = 'copy-code';
+      button.type = 'button';
+      button.textContent = 'COPY';
+      button.setAttribute('aria-label', 'Copy code block');
+      toolbar.append(language, button);
+      pre.before(frame);
+      frame.append(toolbar, pre);
+    }
+    const button = frame.querySelector<HTMLButtonElement>('.copy-code');
+    if (!button) return;
     button.addEventListener('click', async () => {
       const code = pre.querySelector('code')?.textContent ?? '';
       const success = await copyText(code);
@@ -220,7 +234,6 @@ function setup() {
       notify(success ? 'Code copied to clipboard' : 'Could not copy code');
       setTimeout(() => { button.textContent = 'COPY'; }, 2000);
     }, { signal });
-    pre.appendChild(button);
   });
 
   const article = document.querySelector<HTMLElement>('#article-body');
