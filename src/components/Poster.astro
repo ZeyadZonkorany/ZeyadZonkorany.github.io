@@ -1,6 +1,6 @@
 ---
 import { monogramPath } from '../lib/identity';
-interface Props { kind: 'css' | 'redirect' | 'ctf' | 'web' | 'note' | 'end' | 'infinity' | 'x25'; }
+interface Props { kind: 'css' | 'redirect' | 'ctf' | 'web' | 'note' | 'end' | 'infinity' | 'x25' | 'sos' | 'wings'; }
 const { kind } = Astro.props;
 ---
 <svg class:list={['poster', `poster-${kind}`]} viewBox="0 0 720 520" preserveAspectRatio="xMidYMid slice" fill="none" aria-hidden="true">
@@ -45,6 +45,34 @@ const { kind } = Astro.props;
       <text x="64" y="411" font-size="139" font-weight="800" letter-spacing="-9" fill="#dfd6bf" class="poster-type">GHOST</text>
     </g>
     <text x="49" y="493" font-size="16" letter-spacing="3" fill="#26312a" class="poster-mono">X25 / LOW BYTE</text>
+  </> : kind === 'sos' ? <>
+    <path fill="#9faeaa" d="M0 0H720V520H0Z" />
+    <g stroke="#26312a" stroke-width="1" opacity=".25"><path d="M0 104H720M0 208H720M0 312H720M0 416H720M120 0V520M240 0V520M360 0V520M480 0V520M600 0V520" /></g>
+    <g class="poster-shift">
+      <path d="M56 61H664V442H56Z" fill="#dfd6bf" stroke="#26312a" stroke-width="3" />
+      <path d="M56 118H664" stroke="#26312a" stroke-width="3" />
+      <path d="M78 90H92M107 90H121M136 90H150" stroke="#26312a" stroke-width="5" />
+      <text x="585" y="96" font-size="16" letter-spacing="2" fill="#26312a" class="poster-mono">:3000</text>
+      <path d="M361 118V442" stroke="#26312a" stroke-width="2" stroke-dasharray="7 8" />
+      <path d="M80 151H639V384H80Z" fill="#26312a" />
+      <text x="83" y="339" font-size="200" font-weight="800" letter-spacing="-14" fill="#dfd6bf" class="poster-type">SOS</text>
+      <path d="M77 401H248M472 401H641" stroke="#b47f6b" stroke-width="5" />
+      <circle cx="361" cy="401" r="12" fill="#b47f6b" />
+    </g>
+    <text x="57" y="490" font-size="15" letter-spacing="2" fill="#26312a" class="poster-mono">STYLES / ORIGINS / STATE</text>
+  </> : kind === 'wings' ? <>
+    <path fill="#bd927a" d="M0 0H720V520H0Z" />
+    <g stroke="#392c26" stroke-width="1" opacity=".3"><path d="M0 104H720M0 208H720M0 312H720M0 416H720M120 0V520M240 0V520M360 0V520M480 0V520M600 0V520" /></g>
+    <g class="poster-shift">
+      <path d="M45 70H208V143H45ZM278 70H441V143H278ZM511 70H674V143H511Z" fill="#dfd6bf" stroke="#26312a" stroke-width="3" />
+      <g fill="#26312a" font-size="24" font-weight="600" class="poster-mono"><text x="75" y="115">CADDY</text><text x="330" y="115">ATS</text><text x="550" y="115">LWAN</text></g>
+      <path d="M208 106H278M441 106H511" stroke="#26312a" stroke-width="6" />
+      <path d="M653 156V238H71V156" stroke="#26312a" stroke-width="4" stroke-dasharray="9 9" />
+      <path d="M45 247H674V452H45Z" fill="#26312a" />
+      <text x="58" y="408" font-size="149" font-weight="800" letter-spacing="-10" fill="#dfd6bf" class="poster-type">WINGS</text>
+      <path d="M575 285L617 285M596 264V306" stroke="#bd927a" stroke-width="5" />
+    </g>
+    <text x="47" y="493" font-size="16" letter-spacing="3" fill="#26312a" class="poster-mono">HTTP / SIGNAL PIPE</text>
   </> : kind === 'end' ? <>
     <path fill="#b9bda6" d="M0 0H720V520H0Z" />
     <path d="M0 130H720M0 260H720M0 390H720M180 0V520M360 0V520M540 0V520" stroke="#25312c" opacity=".3" />

@@ -7,7 +7,9 @@ import Poster from '../components/Poster.astro';
 import { researchReferences } from '../lib/references';
 import { publishedPosts, formatDate, readingTime } from '../lib/posts';
 const posts = await publishedPosts();
-const writeups = posts.filter((post) => post.data.category === 'CTF').slice(0, 2);
+const writeups = posts.filter((post) => post.data.category === 'CTF');
+const featuredWriteups = writeups.slice(0, 2);
+const olderWriteups = writeups.slice(2, 4);
 const research = [
   ...researchReferences.map((item) => ({ ...item, date: item.added, external: true, meta: `Reference · ${item.source}` })),
   ...posts.filter((post) => post.data.category === 'Research').map((post) => ({ title: post.data.title, href: `/writing/${post.id}/`, category: post.data.category, date: post.data.date.toISOString(), cover: post.data.cover, external: false, meta: `${formatDate(post.data.date)} · ${readingTime(post)} min read` })),
@@ -34,6 +36,7 @@ const research = [
   </section>
   {writeups.length > 0 && <section class="ctf-section" aria-labelledby="ctf-heading">
     <div class="section-heading"><h2 id="ctf-heading">CTF writeups</h2><a class="ctf-all mono" href="/writing/?category=CTF">All writeups <Icon name="arrow" size={17} /></a></div>
-    <div class="ctf-list">{writeups.map((post) => <a class="ctf-preview" href={`/writing/${post.id}/`}><div class="ctf-cover"><Poster kind={post.data.cover} /></div><div class="ctf-copy"><span class="eyebrow">{post.data.event ?? 'CTF'} · {readingTime(post)} min read</span><h3>{post.data.title.split(' — ')[0]}</h3><p>{post.data.description}</p></div><Icon name="arrow" size={24} /></a>)}</div>
+    <div class="ctf-feature-grid">{featuredWriteups.map((post, index) => <a class="ctf-feature" href={`/writing/${post.id}/`}><div class="cover"><Poster kind={post.data.cover} /><span class="cover-open"><Icon name="arrow" size={28} /></span></div><div class="feature-meta mono"><span>{String(index + 1).padStart(2, '0')} / {post.data.event ?? 'CTF'}</span><span>{readingTime(post)} min read</span></div><h3>{post.data.cardTitle ?? post.data.title}</h3><p>{post.data.description}</p></a>)}</div>
+    {olderWriteups.length > 0 && <div class="ctf-list">{olderWriteups.map((post) => <a class="ctf-preview" href={`/writing/${post.id}/`}><div class="ctf-cover"><Poster kind={post.data.cover} /></div><div class="ctf-copy"><span class="eyebrow">{post.data.event ?? 'CTF'} · {readingTime(post)} min read</span><h3>{post.data.title.split(' — ')[0]}</h3><p>{post.data.description}</p></div><Icon name="arrow" size={24} /></a>)}</div>}
   </section>}
 </Base>

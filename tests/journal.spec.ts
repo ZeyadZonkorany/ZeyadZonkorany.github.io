@@ -32,7 +32,7 @@ test('dark is the default, navigation is separated, and the selected theme persi
 
 test('Research contains both credited source links and archive filters work', async ({ page }) => {
   await page.goto('/writing/');
-  await expect(page.locator('.archive-entry:visible')).toHaveCount(6);
+  await expect(page.locator('.archive-entry:visible')).toHaveCount(8);
   await page.getByRole('button', { name: 'Research 3' }).click();
   await expect(page.locator('.archive-entry:visible')).toHaveCount(3);
   for (const [title, href] of researchLinks) {
@@ -41,8 +41,8 @@ test('Research contains both credited source links and archive filters work', as
     await expect(link).toHaveAttribute('target', '_blank');
     await expect(link).toContainText('ZeroSploit');
   }
-  await page.getByRole('button', { name: 'CTF 2' }).click();
-  await expect(page.locator('.archive-entry:visible')).toHaveCount(2);
+  await page.getByRole('button', { name: 'CTF 4' }).click();
+  await expect(page.locator('.archive-entry:visible')).toHaveCount(4);
   await page.getByRole('searchbox', { name: 'Search articles', exact: true }).fill('nothing-matches-this');
   await expect(page.getByRole('heading', { name: 'No articles found.' })).toBeVisible();
   await page.getByRole('button', { name: 'Clear filters' }).click();
@@ -54,7 +54,7 @@ test('Research contains both credited source links and archive filters work', as
   await page.getByRole('searchbox', { name: 'Search articles', exact: true }).fill('nothing-matches-this');
   await expect(page.locator('.archive-entry:visible')).toHaveCount(0);
   await page.keyboard.press('Escape');
-  await expect(page.locator('.archive-entry:visible')).toHaveCount(6);
+  await expect(page.locator('.archive-entry:visible')).toHaveCount(8);
   await page.goto('/writing/?category=Research&q=CSS');
   await expect(page.locator('.archive-entry:visible')).toHaveCount(1);
   await expect(page.getByRole('button', { name: 'Research 3' })).toHaveAttribute('aria-pressed', 'true');
@@ -96,6 +96,23 @@ test('code blocks stay readable in both themes and keep controls visible while s
   }
 });
 
+test('SOS and Wings keep their complete writeups and have distinct covers', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.ctf-feature')).toHaveCount(2);
+  await expect(page.locator('.ctf-feature[href="/writing/sos-styles-origins-state/"] .poster-sos')).toBeVisible();
+  await expect(page.locator('.ctf-feature[href="/writing/wings-crossing-layers/"] .poster-wings')).toBeVisible();
+
+  await page.locator('.ctf-feature[href="/writing/sos-styles-origins-state/"]').click();
+  await expect(page.locator('.article-header h1')).toHaveText('SOS: Styles, Origins, and State');
+  await expect(page.locator('#article-body')).toContainText('The exact composition is version-sensitive.');
+  expect(await page.locator('.prose pre').count()).toBeGreaterThan(20);
+
+  await page.goto('/writing/wings-crossing-layers/');
+  await expect(page.locator('.article-header h1')).toHaveText('Crossing layers: From HTTP state confusion to command execution through a forged callback');
+  await expect(page.locator('#article-body')).toContainText('Redo the address calculations for each instance');
+  expect(await page.locator('.prose pre').count()).toBeGreaterThan(15);
+});
+
 test('both CTF articles are discoverable and link to the original writeups', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/');
@@ -109,7 +126,7 @@ test('both CTF articles are discoverable and link to the original writeups', asy
   await page.getByRole('navigation', { name: 'Table of contents' }).getByRole('link', { name: 'Challenge Architecture', exact: true }).click();
   await expect(page.locator('#challenge-architecture')).toBeInViewport();
   await page.goto('/writing/?category=CTF');
-  await expect(page.locator('.archive-entry:visible')).toHaveCount(2);
+  await expect(page.locator('.archive-entry:visible')).toHaveCount(4);
   await page.getByRole('searchbox', { name: 'Search articles', exact: true }).fill('1nfin1ty');
   await expect(page.locator('.archive-entry:visible')).toHaveCount(1);
   await page.locator('.archive-entry:visible a').click();
@@ -125,8 +142,9 @@ test('site search supports shortcuts, results, keyboard selection, and focus ret
   const search = dialog.getByRole('searchbox');
   await expect(search).toBeFocused();
   await search.fill('CSS');
-  await expect(dialog.getByRole('link')).toHaveCount(1);
-  await expect(dialog.getByRole('link')).toHaveAttribute('href', researchLinks[0][1]);
+  await expect(dialog.getByRole('link')).toHaveCount(2);
+  await expect(dialog.getByRole('link', { name: /When CSS Crosses the Boundary/ })).toHaveAttribute('href', researchLinks[0][1]);
+  await expect(dialog.getByRole('link', { name: /SOS: Styles, Origins, and State/ })).toHaveAttribute('href', '/writing/sos-styles-origins-state/');
   await search.fill('doesnotexist');
   await expect(dialog.getByText('No results found.')).toBeVisible();
   await page.keyboard.press('Escape');
@@ -134,7 +152,7 @@ test('site search supports shortcuts, results, keyboard selection, and focus ret
   await expect(page.getByRole('button', { name: 'Search', exact: true })).toBeFocused();
   await page.keyboard.press('Meta+k');
   await expect(dialog).toBeVisible();
-  await search.fill('About');
+  await search.fill('About this blog');
   await page.keyboard.press('ArrowDown');
   await expect(dialog.locator('.command-result.active')).toBeFocused();
   await page.keyboard.press('Enter');
@@ -165,7 +183,7 @@ test('reading controls and article links work', async ({ page, context }) => {
 test('pages and search fit mobile, tablet, and desktop screens', async ({ page }) => {
   for (const width of [320, 360, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    for (const path of ['/', '/writing/', '/projects/', '/about/', '/writing/a-place-for-the-details/', '/writing/end/', '/writing/1nfin1ty/', '/writing/dnsjava-x25-unicode-digits/', '/404.html']) {
+    for (const path of ['/', '/writing/', '/projects/', '/about/', '/writing/a-place-for-the-details/', '/writing/end/', '/writing/1nfin1ty/', '/writing/dnsjava-x25-unicode-digits/', '/writing/sos-styles-origins-state/', '/writing/wings-crossing-layers/', '/404.html']) {
       await page.goto(path);
       await page.evaluate(() => document.fonts.ready);
       const sizes = await page.evaluate(() => ({ viewport: innerWidth, document: document.documentElement.scrollWidth }));
@@ -182,7 +200,7 @@ test('pages and search have no automated accessibility violations in both themes
   for (const theme of ['light', 'dark']) {
     await page.goto('/');
     await page.evaluate((value) => localStorage.setItem('zonkor-theme-v2', value), theme);
-    for (const path of ['/', '/writing/', '/projects/', '/about/', '/writing/a-place-for-the-details/', '/writing/end/', '/writing/1nfin1ty/', '/writing/dnsjava-x25-unicode-digits/']) {
+    for (const path of ['/', '/writing/', '/projects/', '/about/', '/writing/a-place-for-the-details/', '/writing/end/', '/writing/1nfin1ty/', '/writing/dnsjava-x25-unicode-digits/', '/writing/sos-styles-origins-state/', '/writing/wings-crossing-layers/']) {
       await page.goto(path);
       await page.evaluate(() => Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => {}))));
       const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
@@ -201,6 +219,8 @@ test('feeds, metadata, source attribution, and draft exclusion are correct', asy
   expect(await rss.text()).toContain('EnD — Sekai CTF 2026');
   expect(await rss.text()).toContain('1nfin1ty — 0xL4ugh CTF v5');
   expect(await rss.text()).toContain('/writing/dnsjava-x25-unicode-digits/');
+  expect(await rss.text()).toContain('/writing/sos-styles-origins-state/');
+  expect(await rss.text()).toContain('/writing/wings-crossing-layers/');
   expect(await rss.text()).not.toContain('Your first research entry');
   expect(await rss.text()).not.toContain('When CSS Crosses the Boundary');
   const sitemap = await readFile('dist/sitemap-0.xml', 'utf8');
@@ -208,6 +228,8 @@ test('feeds, metadata, source attribution, and draft exclusion are correct', asy
   expect(sitemap).toContain('https://zeyadzonkorany.github.io/writing/end/');
   expect(sitemap).toContain('https://zeyadzonkorany.github.io/writing/1nfin1ty/');
   expect(sitemap).toContain('https://zeyadzonkorany.github.io/writing/dnsjava-x25-unicode-digits/');
+  expect(sitemap).toContain('https://zeyadzonkorany.github.io/writing/sos-styles-origins-state/');
+  expect(sitemap).toContain('https://zeyadzonkorany.github.io/writing/wings-crossing-layers/');
   expect(sitemap).not.toContain('your-first-research-entry');
   await expect(access('dist/writing/your-first-research-entry/index.html')).rejects.toThrow();
   const html = await readFile('dist/writing/a-place-for-the-details/index.html', 'utf8');
@@ -226,7 +248,7 @@ test('the site remains readable without JavaScript and respects reduced motion',
   await expect(noJsPage.locator('html')).toHaveAttribute('data-theme', 'dark');
   await expect(noJsPage.getByRole('heading', { name: 'Categories', exact: true })).toBeVisible();
   await noJsPage.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Writing', exact: true }).click();
-  await expect(noJsPage.locator('.archive-entry')).toHaveCount(6);
+  await expect(noJsPage.locator('.archive-entry')).toHaveCount(8);
   await expect(noJsPage.getByRole('button', { name: 'Search', exact: true })).toHaveCount(0);
   await expect(noJsPage.locator('.archive-controls')).not.toBeVisible();
   await noJs.close();

@@ -113,9 +113,9 @@ main:focus { outline: none; }
 .poster-type { font-family: var(--heading); font-stretch: 90%; }
 .poster-mono { font-family: var(--mono); }
 .poster-shift { transform-origin: center; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
-.research-feature:hover .poster-shift, .research-feature:focus-visible .poster-shift { transform: translate(var(--shift-x, 8px), var(--shift-y, -6px)); }
+.research-feature:hover .poster-shift, .research-feature:focus-visible .poster-shift, .ctf-feature:hover .poster-shift, .ctf-feature:focus-visible .poster-shift { transform: translate(var(--shift-x, 8px), var(--shift-y, -6px)); }
 .cover-open { position: absolute; bottom: 0; right: 0; width: 64px; height: 64px; background: var(--bg); display: grid; place-items: center; color: var(--text); transition: background .25s, color .25s; }
-.research-feature:hover .cover-open { background: var(--accent); color: var(--bg); }
+.research-feature:hover .cover-open, .ctf-feature:hover .cover-open { background: var(--accent); color: var(--bg); }
 .feature-meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 21px; font-size: 10px; color: var(--muted); }
 .feature-meta > span:first-child { color: var(--accent); }
 .research-feature h3 { font-size: clamp(27px, 2.8vw, 39px); line-height: 1.12; letter-spacing: -.045em; margin-top: 16px; font-weight: 660; }
@@ -123,7 +123,13 @@ main:focus { outline: none; }
 .ctf-section { margin-top: 80px; }
 .ctf-all { display: inline-flex; align-items: center; gap: 12px; font-size: 11px; color: var(--muted); min-height: 36px; }
 .ctf-all:hover { color: var(--accent); }
-.ctf-list { border-top: 1px solid var(--line); }
+.ctf-feature-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px; }
+.ctf-feature { display: block; min-width: 0; }
+.ctf-feature:nth-child(2) { margin-top: 68px; }
+.ctf-feature h3 { margin-top: 14px; font-size: clamp(28px, 2.7vw, 38px); line-height: 1.15; letter-spacing: -.045em; font-weight: 660; }
+.ctf-feature p { max-width: 55ch; margin-top: 12px; color: var(--muted); font-size: 14px; line-height: 1.65; }
+.ctf-feature:hover h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 6px; }
+.ctf-list { margin-top: 56px; border-top: 1px solid var(--line); }
 .ctf-preview { display: grid; grid-template-columns: 150px minmax(0, 1fr) 24px; align-items: center; gap: 32px; border-bottom: 1px solid var(--line); padding: 28px 0; }
 .ctf-cover { aspect-ratio: 18/13; overflow: hidden; }
 .ctf-copy h3 { font-size: 35px; line-height: 1.2; letter-spacing: -.04em; margin: 9px 0; }
@@ -281,6 +287,7 @@ input::placeholder { color: var(--faint); opacity: 1; }
   .site-header { gap: 25px; }
   .main-nav { gap: 24px; }
   .research-spread { gap: 42px; }
+  .ctf-feature-grid { gap: 42px; }
   .feature-1 { column-gap: 38px; }
   .feature-3 { margin-top: 82px; }
   .archive-entry > a { grid-template-columns: 30px minmax(0, 1fr) 140px 22px; gap: 25px; }
@@ -317,6 +324,10 @@ input::placeholder { color: var(--faint); opacity: 1; }
   .section-heading h2 { font-size: 30px; }
   .section-heading > span { font-size: 10px; }
   .research-spread { gap: 29px; }
+  .ctf-feature-grid { gap: 29px; }
+  .ctf-feature:nth-child(2) { margin-top: 44px; }
+  .ctf-feature h3 { font-size: 28px; }
+  .ctf-feature p { font-size: 13px; }
   .feature-1 { column-gap: 28px; }
   .feature-3 { margin-top: 62px; }
   .research-feature h3 { font-size: 28px; }
@@ -377,6 +388,10 @@ input::placeholder { color: var(--faint); opacity: 1; }
   .article-cover { margin-top: 26px; aspect-ratio: 18/12; }
   .large-text-link { min-width: 140px; font-size: 16px; gap: 16px; }
   .research-spread { grid-template-columns: minmax(0, 1fr); gap: 42px; }
+  .ctf-feature-grid { grid-template-columns: minmax(0, 1fr); gap: 42px; }
+  .ctf-feature:nth-child(2) { margin-top: 0; margin-left: 28px; }
+  .ctf-feature h3 { font-size: 32px; }
+  .ctf-list { margin-top: 44px; }
   .feature-1 { display: block; }
   .feature-1 .feature-meta { margin-top: 17px; }
   .feature-1 h3 { max-width: none; }
